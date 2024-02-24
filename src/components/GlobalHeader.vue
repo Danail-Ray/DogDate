@@ -15,11 +15,11 @@
 
 <style scoped>
 .header {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
-  padding: 20px 100px;
+  padding: 30px 100px 50px 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;

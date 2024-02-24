@@ -27,11 +27,8 @@ import LandingView from './views/LandingView.vue'
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-/* Hide scrollbar */
-body::-webkit-scrollbar {
-  width: 0;
+  scrollbar-width: none;
+  color: #fff;
 }
 
 ::selection {

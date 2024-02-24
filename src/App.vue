@@ -12,8 +12,8 @@ import LandingView from './views/LandingView.vue'
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
 :root {
-  --Lora: Lora, sans-serif;
-  --Gilroy: Gilroy Bold, sans-serif;
+  --Lora: 'Lora Medium', serif;
+  --Gilroy: 'Gilroy Bold', sans-serif;
   /* --global-font-size: 0.8rem;
     --global-text-color: #222;
     --global-primary-title-size: 2rem;

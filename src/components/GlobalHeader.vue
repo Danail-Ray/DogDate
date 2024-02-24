@@ -1,15 +1,17 @@
 <template>
   <div class="header">
-    <h2 class="logo">DogDate</h2>
+    <h1 class="logo">DogDate</h1>
     <nav class="naviagtion">
-      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/">Blog</RouterLink>
       <RouterLink to="/about">Search</RouterLink>
       <RouterLink to="/about">Chats</RouterLink>
       <RouterLink to="/about">Profile</RouterLink>
-      <button class="login-button">Login</button>
+      <RouterLink to="/about"><i class="pi pi-user"></i>Account</RouterLink>
     </nav>
   </div>
 </template>
+
+<script lang="ts" setup></script>
 
 <style scoped>
 .header {
@@ -28,6 +30,7 @@
   font-size: 2em;
   color: #fff;
   user-select: none;
+  font-family: var(--Lora);
 }
 
 .naviagtion a {
@@ -37,6 +40,18 @@
   text-decoration: none;
   font-weight: 500;
   margin-left: 40px;
+  font-family: var(--Gilroy);
+  font-weight: 700;
+}
+
+.naviagtion a:hover,
+.naviagtion a:hover .pi {
+  color: #fbd784;
+}
+
+.naviagtion a .pi {
+  color: #fff;
+  margin-right: 10px;
 }
 
 .naviagtion a::after {
@@ -45,7 +60,7 @@
   left: 0;
   height: 3px;
   width: 100%;
-  background: #fff;
+  background: #fbd784;
   bottom: -6px;
   border-radius: 5px;
   transform-origin: right;
@@ -56,9 +71,10 @@
 .naviagtion a:hover::after {
   transform-origin: left;
   transform: scaleX(1);
+  color: #fbd784;
 }
 
-.naviagtion .login-button {
+.naviagtion .account-button {
   width: 130px;
   height: 50px;
   background-color: transparent;
@@ -73,7 +89,7 @@
   transition: 0.5s;
 }
 
-.naviagtion .login-button:hover {
+.naviagtion .account-button:hover {
   background-color: #fff;
   color: #162938;
 }

@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import Header from './components/GlobalHeader.vue'
 import LandingView from './views/LandingView.vue'
 </script>
 
 <template>
-  <header>
-    <Header></Header>
-  </header>
-  <main>
-    <LandingView />
-  </main>
+  <LandingView />
 </template>
 
 <style>
@@ -35,10 +29,13 @@ import LandingView from './views/LandingView.vue'
   box-sizing: border-box;
 }
 
+/* Hide scrollbar */
+body::-webkit-scrollbar {
+  width: 0;
+}
+
 ::selection {
   color: #fbd784;
   background: none;
 }
-
-/* temporär */
 </style>

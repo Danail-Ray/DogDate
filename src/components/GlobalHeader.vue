@@ -6,12 +6,24 @@
       <RouterLink to="/about">Search</RouterLink>
       <RouterLink to="/about">Chats</RouterLink>
       <RouterLink to="/about">Profile</RouterLink>
-      <RouterLink to="/about"><i class="pi pi-user"></i>Account</RouterLink>
+      <a @click="toggleLoginSignup"> <i class="pi pi-user"></i>Account </a>
     </nav>
+  </div>
+  <div class="login-signup-container">
+    <LoginSignupContainer v-if="showLoginSignup" @close="showLoginSignup = false" />
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { ref } from 'vue'
+import LoginSignupContainer from '../components/LoginSignupContainer.vue'
+
+const showLoginSignup = ref(false)
+
+const toggleLoginSignup = () => {
+  showLoginSignup.value = !showLoginSignup.value
+}
+</script>
 
 <style scoped>
 .header {
@@ -92,6 +104,14 @@
 .naviagtion .account-button:hover {
   background-color: #fff;
   color: #162938;
+}
+
+.login-signup-container {
+  z-index: 99;
+  position: fixed;
+  top: 30%; /* Place it 50% from the top of the viewport */
+  left: 50%; /* Place it 50% from the left of the viewport */
+  transform: translate(-50%, -50%); /* Center it exactly in the middle */
 }
 
 @media screen and (min-width: 2300px) {

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import LandingView from './views/LandingView.vue'
+import LoginSignupContainer from './components/LoginSignupContainer.vue'
 </script>
 
 <template>
-  <LandingView />
+  <div class="main-container">
+    <LandingView />
+  </div>
 </template>
 
 <style>
@@ -29,6 +32,10 @@ import LandingView from './views/LandingView.vue'
   box-sizing: border-box;
   scrollbar-width: none;
   color: #fff;
+}
+
+.main-container {
+  position: relative; /* Ensure the main container is positioned relative */
 }
 
 ::selection {

@@ -26,6 +26,9 @@ const toggleLoginSignup = () => {
 </script>
 
 <style scoped>
+.naviagtion a{
+  cursor: pointer;
+}
 .header {
   /* position: fixed; */
   top: 0;

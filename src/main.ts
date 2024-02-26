@@ -51,6 +51,7 @@ const firebaseConfig = {
 const init = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(init);
 
+
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
@@ -61,3 +62,5 @@ app.mount('#app')
 const auth = getAuth(init);
 export default auth;
 export { auth };
+
+

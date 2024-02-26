@@ -3,13 +3,19 @@
     <h1 class="logo">DogDate</h1>
     <nav class="naviagtion">
       <RouterLink to="/">Blog</RouterLink>
-      <RouterLink to="/about">Search</RouterLink>
-      <RouterLink to="/about">Chats</RouterLink>
-      <RouterLink to="/about">Profile</RouterLink>
-      <a @click="toggleLoginSignup"> <i class="pi pi-user"></i>Account </a>
+      <RouterLink to="/landing">Search</RouterLink>
+      <RouterLink to="/dashboard">Chats</RouterLink>
+      <RouterLink to="/landing">Profile</RouterLink>
+      <template v-if="user">
+        <Button class="logout-button" @click="signOutUser">Logout</Button>
+      </template>
+
+      <template v-if="!user">
+        <a @click="toggleLoginSignup"> <i class="pi pi-user"></i>Account </a>
+      </template>
     </nav>
   </div>
-  <div class="login-signup-container">
+  <div class="login-signup-container" v-if="!user">
     <LoginSignupContainer v-if="showLoginSignup" @close="showLoginSignup = false" />
   </div>
 </template>
@@ -23,12 +29,33 @@ const showLoginSignup = ref(false)
 const toggleLoginSignup = () => {
   showLoginSignup.value = !showLoginSignup.value
 }
+
+import { getAuth, signOut } from 'firebase/auth'
+import { useRouter } from 'vue-router'
+
+const auth = getAuth()
+const user = ref(auth.currentUser)
+const router = useRouter()
+
+const signOutUser = () => {
+  signOut(auth)
+    .then(() => {
+      user.value = null
+      router.push('/')
+    })
+    .catch(error => {
+      console.error('Sign out error:', error.message)
+    })
+}
+
+
 </script>
 
 <style scoped>
-.naviagtion a{
+.naviagtion a {
   cursor: pointer;
 }
+
 .header {
   /* position: fixed; */
   top: 0;
@@ -112,9 +139,12 @@ const toggleLoginSignup = () => {
 .login-signup-container {
   z-index: 99;
   position: fixed;
-  top: 30%; /* Place it 50% from the top of the viewport */
-  left: 50%; /* Place it 50% from the left of the viewport */
-  transform: translate(-50%, -50%); /* Center it exactly in the middle */
+  top: 30%;
+  /* Place it 50% from the top of the viewport */
+  left: 50%;
+  /* Place it 50% from the left of the viewport */
+  transform: translate(-50%, -50%);
+  /* Center it exactly in the middle */
 }
 
 @media screen and (min-width: 2300px) {
@@ -122,14 +152,16 @@ const toggleLoginSignup = () => {
     position: fixed;
     top: 0;
     left: 0;
-    width: calc(100% - 600px); /* Subtract 200px from both sides */
+    width: calc(100% - 600px);
+    /* Subtract 200px from both sides */
     padding: 20px 100px;
-    margin-left: 300px; /* Add 200px margin on the left */
-    margin-right: 300px; /* Add 200px margin on the right */
+    margin-left: 300px;
+    /* Add 200px margin on the left */
+    margin-right: 300px;
+    /* Add 200px margin on the right */
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 99;
   }
-}
-</style>
+}</style>

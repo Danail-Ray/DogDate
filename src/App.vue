@@ -6,8 +6,9 @@ import LoginSignupContainer from './components/LoginSignupContainer.vue'
 
 <template>
   <div class="main-container">
-    <LandingView />
+    <RouterView />
   </div>
+
 </template>
 
 <style>

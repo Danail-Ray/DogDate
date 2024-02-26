@@ -10,11 +10,54 @@ import 'primevue/resources/primevue.min.css' // Core CSS
 import 'primevue/resources/themes/aura-dark-green/theme.css' // Theme
 import 'primevue/resources/themes/aura-light-green/theme.css' // Theme
 
-const app = createApp(App)
 
+//Firebase
+// Import the functions you need from the SDKs you need
+
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from 'firebase/auth';
+
+// TODO: Add SDKs for Firebase products that you want to use
+
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+
+// Your web app's Firebase configuration
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyCULk4mrnOS3rT257MbD1ANMcupCRzizn4",
+
+    authDomain: "dogdatealpha.firebaseapp.com",
+
+    projectId: "dogdatealpha",
+
+    storageBucket: "dogdatealpha.appspot.com",
+
+    messagingSenderId: "759321408231",
+
+    appId: "1:759321408231:web:68427289b219aeb2186842",
+
+    measurementId: "G-R7LRHWR5VF"
+
+};
+
+
+// Initialize Firebase
+
+const init = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(init);
+
+const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(PrimeVue)
-app.component('PrimeButton', Button) // Register Button component globally
 
 app.mount('#app')
+
+const auth = getAuth(init);
+export default auth;
+export { auth };

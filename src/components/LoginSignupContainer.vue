@@ -3,66 +3,68 @@
     <span class="icon-close" @click="hideWrapper"><ion-icon name="close"></ion-icon></span>
     <div class="form-box login" v-if="loginActive">
       <h2>Login</h2>
-      <form action="#">
+      
         <div class="input-box">
           <span class="icon"><ion-icon name="mail"></ion-icon></span>
-          <input type="email" required />
+          <input type="email" v-model="loginEmail" required />
           <label>Email</label>
         </div>
         <div class="input-box">
           <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-          <input type="password" required />
+          <input type="password" v-model="loginPassword" required />
           <label>Password</label>
         </div>
         <div class="remember-forgot">
           <label><input type="checkbox" />Remember me</label>
           <a href="#">Forgot Password?</a>
         </div>
-        <button type="submit" class="btn">Login</button>
+        <button class="btn" @click="signIn">Login</button>
         <div class="login-register">
           <p>
             Don't have an account?
             <a href="#" class="register-link" @click="loginActive = false">Register</a>
           </p>
         </div>
-      </form>
+      
     </div>
 
     <div class="form-box register" v-if="!loginActive">
       <h2>Registration</h2>
-      <form action="#">
+      
         <div class="input-box">
           <span class="icon"><ion-icon name="person"></ion-icon></span>
-          <input type="text" required />
+          <input type="text" v-model="username" required />
           <label>Username</label>
         </div>
         <div class="input-box">
           <span class="icon"><ion-icon name="mail"></ion-icon></span>
-          <input type="email" required />
+          <input type="email" v-model="email" required />
           <label>Email</label>
         </div>
         <div class="input-box">
           <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-          <input type="password" required />
+          <input type="password" v-model="password" required />
           <label>Password</label>
         </div>
         <div class="remember-forgot">
           <label><input type="checkbox" />I aggree to the terms & conditions</label>
         </div>
-        <button type="submit" class="btn">Register</button>
+        <button class="btn" @click="register">Register</button>
         <div class="login-register">
           <p>
             Already have an account?
             <a href="#" class="login-link" @click="loginActive = true">Login</a>
           </p>
         </div>
-      </form>
+     
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits  } from 'vue'
+import { ref, defineEmits } from 'vue'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { useRouter } from 'vue-router'
 
 const loginActive = ref(true)
 
@@ -72,6 +74,41 @@ const hideWrapper = () => {
   emits('close')
 }
 
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const router = useRouter()
+const auth = getAuth()
+
+const register = () => {
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user
+      router.push("/dashboard")
+    })
+    .catch((error) => {
+      const errorCode = error.code
+      const errorMessage = error.message
+      // ..
+    })
+}
+
+const loginEmail = ref('')
+const loginPassword = ref('')
+
+const signIn = () => {
+  signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      router.push("/dashboard")
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    })
+}
 
 
 
@@ -153,10 +190,11 @@ document.head.appendChild(ioniconsNoModuleScript)
   transition: 0.5s;
 }
 
-.input-box input:focus ~ label,
-.input-box input:valid ~ label {
+.input-box input:focus~label,
+.input-box input:valid~label {
   top: -5px;
 }
+
 .input-box input {
   width: 100%;
   height: 100%;

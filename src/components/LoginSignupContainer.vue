@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" :style="{ height: loginActive ? '440px' : '500px' }">
+  <div class="wrapper" :style="{ height: loginActive ? '440px' : '500px' }" v-if="!user">
     <span class="icon-close" @click="hideWrapper"><ion-icon name="close"></ion-icon></span>
     <div class="form-box login" v-if="loginActive">
       <h2>Login</h2>
@@ -30,7 +30,6 @@
 
     <div class="form-box register" v-if="!loginActive">
       <h2>Registration</h2>
-      
         <div class="input-box">
           <span class="icon"><ion-icon name="person"></ion-icon></span>
           <input type="text" v-model="username" required />
@@ -56,14 +55,13 @@
             <a href="#" class="login-link" @click="loginActive = true">Login</a>
           </p>
         </div>
-     
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
 const loginActive = ref(true)
@@ -79,12 +77,15 @@ const email = ref('')
 const password = ref('')
 const router = useRouter()
 const auth = getAuth()
+const user = ref(auth.currentUser)
 
 const register = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential: { user: any; }) => {
+      updateProfile(userCredential.user, {
+        displayName: username.value
+      })
       // Signed in
-      const user = userCredential.user
       router.push("/dashboard")
     })
     .catch((error: { code: any; message: any; }) => {

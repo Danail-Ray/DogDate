@@ -26,6 +26,7 @@ import LoginSignupContainer from '../components/LoginSignupContainer.vue'
 
 const showLoginSignup = ref(false)
 
+
 const toggleLoginSignup = () => {
   showLoginSignup.value = !showLoginSignup.value
 }

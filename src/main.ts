@@ -45,17 +45,17 @@ const firebaseConfig = {
 const init = initializeApp(firebaseConfig)
 // const analytics = getAnalytics(init);
 
-const app = createApp(App)
-app.use(createPinia())
-app.use(router)
-app.use(PrimeVue)
-
-app.mount('#app')
+// const app = createApp(App)
+// app.use(createPinia())
+// app.use(router)
+// app.use(PrimeVue)
+// app.mount('#app')
 
 const auth = getAuth(init)
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    user.refreshToken
+    // user.refreshToken
+    createApp(App).use(createPinia()).use(router).use(PrimeVue).mount('#app')
     console.log('User is signed in:', user)
   } else {
     // User is signed out.

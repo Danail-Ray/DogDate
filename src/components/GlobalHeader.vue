@@ -7,7 +7,7 @@
       <RouterLink to="/dashboard">Chats</RouterLink>
       <RouterLink to="/landing">Profile</RouterLink>
       <template v-if="user">
-        <Button class="logout-button" @click="signOutUser">Logout</Button>
+        <Button class="logout-button" @click="signOutUser">Logout: {{displayName}}</Button>
       </template>
 
       <template v-if="!user">
@@ -37,6 +37,8 @@ import { useRouter } from 'vue-router'
 const auth = getAuth()
 const user = ref(auth.currentUser)
 const router = useRouter()
+const displayName = user.value?.displayName
+
 
 const signOutUser = () => {
   signOut(auth)
@@ -67,6 +69,20 @@ const signOutUser = () => {
   justify-content: space-between;
   align-items: center;
   z-index: 99;
+}
+
+.logout-button {
+  background-color: transparent;
+  border: 2px solid #fff;
+  outline: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1em;
+  color: #fff;
+  font-weight: 500;
+  margin-left: 40px;
+  transition: 0.5s;
+
 }
 
 .logo {

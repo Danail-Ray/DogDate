@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import LandingView from './views/LandingView.vue'
-import LoginSignupContainer from './components/LoginSignupContainer.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>

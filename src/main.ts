@@ -10,47 +10,40 @@ import 'primevue/resources/primevue.min.css' // Core CSS
 import 'primevue/resources/themes/aura-dark-green/theme.css' // Theme
 import 'primevue/resources/themes/aura-light-green/theme.css' // Theme
 
-
 //Firebase
 // Import the functions you need from the SDKs you need
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from 'firebase/auth';
+import { initializeApp } from 'firebase/app'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 // TODO: Add SDKs for Firebase products that you want to use
 
 // https://firebase.google.com/docs/web/setup#available-libraries
-
 
 // Your web app's Firebase configuration
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
+  apiKey: 'AIzaSyCULk4mrnOS3rT257MbD1ANMcupCRzizn4',
 
-    apiKey: "AIzaSyCULk4mrnOS3rT257MbD1ANMcupCRzizn4",
+  authDomain: 'dogdatealpha.firebaseapp.com',
 
-    authDomain: "dogdatealpha.firebaseapp.com",
+  projectId: 'dogdatealpha',
 
-    projectId: "dogdatealpha",
+  storageBucket: 'dogdatealpha.appspot.com',
 
-    storageBucket: "dogdatealpha.appspot.com",
+  messagingSenderId: '759321408231',
 
-    messagingSenderId: "759321408231",
+  appId: '1:759321408231:web:68427289b219aeb2186842',
 
-    appId: "1:759321408231:web:68427289b219aeb2186842",
-
-    measurementId: "G-R7LRHWR5VF"
-
-};
-
+  measurementId: 'G-R7LRHWR5VF'
+}
 
 // Initialize Firebase
 
-const init = initializeApp(firebaseConfig);
+const init = initializeApp(firebaseConfig)
 // const analytics = getAnalytics(init);
-
 
 const app = createApp(App)
 app.use(createPinia())
@@ -59,8 +52,15 @@ app.use(PrimeVue)
 
 app.mount('#app')
 
-const auth = getAuth(init);
-export default auth;
-export { auth };
-
-
+const auth = getAuth(init)
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    user.refreshToken
+    console.log('User is signed in:', user)
+  } else {
+    // User is signed out.
+    console.log('User is signed out')
+  }
+})
+export default auth
+export { auth }

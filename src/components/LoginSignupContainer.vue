@@ -82,12 +82,12 @@ const auth = getAuth()
 
 const register = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then((userCredential) => {
+    .then((userCredential: { user: any; }) => {
       // Signed in
       const user = userCredential.user
       router.push("/dashboard")
     })
-    .catch((error) => {
+    .catch((error: { code: any; message: any; }) => {
       const errorCode = error.code
       const errorMessage = error.message
       // ..
@@ -99,12 +99,12 @@ const loginPassword = ref('')
 
 const signIn = () => {
   signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
-    .then((userCredential) => {
+    .then((userCredential: { user: any; }) => {
       // Signed in 
       const user = userCredential.user;
       router.push("/dashboard")
     })
-    .catch((error) => {
+    .catch((error: { code: any; message: any; }) => {
       const errorCode = error.code;
       const errorMessage = error.message;
     })
@@ -139,6 +139,7 @@ document.head.appendChild(ioniconsNoModuleScript)
   align-items: center;
   overflow: hidden;
   transition: height 0.2s ease;
+  margin-top: 50px;
 }
 
 .wrapper .form-box {

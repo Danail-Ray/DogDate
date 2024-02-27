@@ -15,13 +15,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { getAuth, signOut } from 'firebase/auth'
-
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const auth = getAuth()
 const user = ref(auth.currentUser)
-const displayName = user.value?.displayName
+
+const displayName = user.value?.displayName || ref(localStorage.getItem('displayName') || '');
 
 const signOutUser = () => {
   signOut(auth)

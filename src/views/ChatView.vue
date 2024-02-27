@@ -9,6 +9,7 @@ import Header from '../components/GlobalHeader.vue'
 
 </script>
 
+
 <style scoped>
   .background {
   min-height: 100vh;

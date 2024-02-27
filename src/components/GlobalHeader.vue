@@ -37,7 +37,7 @@ import { useRouter } from 'vue-router'
 const auth = getAuth()
 const user = ref(auth.currentUser)
 const router = useRouter()
-const displayName = user.value?.displayName
+const displayName = user.value?.displayName || ref(localStorage.getItem('displayName') || '');
 
 
 const signOutUser = () => {

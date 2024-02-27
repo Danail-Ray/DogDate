@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
 const loginActive = ref(true)
@@ -83,10 +83,11 @@ const register = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential: { user: any; }) => {
       updateProfile(userCredential.user, {
-        displayName: username.value
+        displayName: username.value        
       })
       // Signed in
-      router.push("/dashboard")
+      localStorage.setItem('displayName', username.value);
+      router.push("/")
     })
     .catch((error: { code: any; message: any; }) => {
       const errorCode = error.code

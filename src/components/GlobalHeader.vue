@@ -4,8 +4,8 @@
     <nav class="naviagtion">
       <RouterLink to="/">Blog</RouterLink>
       <RouterLink to="/landing">Search</RouterLink>
-      <RouterLink to="/dashboard">Chats</RouterLink>
-      <RouterLink to="/landing">Profile</RouterLink>
+      <RouterLink to="/chat">Chats</RouterLink>
+      <RouterLink to="/dashboard">Profile</RouterLink>
       <template v-if="user">
         <Button class="logout-button" @click="signOutUser">Logout: {{displayName}}</Button>
       </template>

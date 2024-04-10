@@ -115,7 +115,7 @@ import Header from '../components/GlobalHeader.vue'
           <div class="copyright">
             Copyright 2024 DogDate, Inc. Terms &amp; Privacy<br />A concept by
             <a href="https://watchr.netlify.app/" target="_blank" class="author"
-              >Sebastian Missler</a
+              >Danail Raykov</a
             >
           </div>
         </div>

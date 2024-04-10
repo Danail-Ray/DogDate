@@ -30,7 +30,7 @@ import { RouterView } from 'vue-router'
   padding: 0;
   box-sizing: border-box;
   scrollbar-width: none;
-  color: #fff;
+  color: #ffffff;
 }
 
 .main-container {

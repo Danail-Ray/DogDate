@@ -64,7 +64,7 @@ const signOutUser = () => {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 30px 100px 50px 100px;
+  padding: 30px 100px 30px 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -82,7 +82,7 @@ const signOutUser = () => {
   font-weight: 500;
   margin-left: 40px;
   transition: 0.5s;
-
+  padding: 3px;
 }
 
 .logo {

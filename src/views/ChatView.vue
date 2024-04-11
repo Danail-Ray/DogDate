@@ -44,36 +44,18 @@
               <div class="dummy-chat"></div>
               <div class="dummy-chat"></div>
               <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
-              <div class="dummy-chat"></div>
             </div>
           </div>
-          <div class="chat"></div>
+          <div class="chat">
+            <div class="top-section">
+              <div class="username">
+                <h1>Username</h1>
+                <div class="is-active"></div>
+              </div>
+            </div>
+            <div class="middle-section"></div>
+            <div class="bottom-section"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -84,13 +66,14 @@
 import Header from '../components/GlobalHeader.vue'
 import { ref } from 'vue'
 import { getAuth } from 'firebase/auth'
-import { onMounted, onActivated } from 'vue'
+import { onMounted } from 'vue'
 
 import 'primeicons/primeicons.css'
 
 // const auth = getAuth()
 // const user = ref(auth.currentUser)
 // const username = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
+
 
 //NEEDS FIX: After new chat has been started, make it bigger
 onMounted(() => {
@@ -103,11 +86,10 @@ onMounted(() => {
   if (container) {
     // Count the number of child elements
     const numberOfChildren = container.children.length
-    if (numberOfChildren > 20) {
-
+    if (numberOfChildren > 0) {
       const currentHeight = container.clientHeight
       console.log(`Height of container: ${currentHeight}px`)
-      const newHeight = currentHeight  + (numberOfChildren - 20) * 100
+      const newHeight = numberOfChildren * 65 + 100
       container.style.height = `${newHeight}px`
       console.log(`Height of container: ${container.style.height}`)
     }
@@ -119,6 +101,46 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+.top-section {
+  width: 100%;
+  height: 95px;
+  background-color: rgb(223, 246, 255);
+}
+
+.middle-section {
+  width: 100%;
+  height: 600px;
+  background-color: rgb(255, 255, 255);
+}
+
+.bottom-section {
+  width: 100%;
+  height: 232px;
+  background-color: rgb(223, 246, 255);
+
+}
+
+.is-active {
+  width: 10px;
+  height: 10px;
+  background-color: rgb(6, 224, 6);
+  border-radius: 50%;
+  translate: 50%;
+  transform: translate(50%, 50%);
+}
+
+.username {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 400px;
+  padding-left: 150px;
+}
+
+
+
 .dummy-chat {
   height: 100px;
   background-color: rgb(55, 200, 248);
@@ -126,7 +148,6 @@ onMounted(() => {
 }
 
 .open-chats {
-  height: 1080px;
   width: 100%;
   background-color: rgb(146, 220, 247);
   display: flex;
@@ -139,7 +160,7 @@ onMounted(() => {
 
 .searchbar {
   width: 100%;
-  height: 10%;
+  height: 95px;
   background-color: rgb(197, 240, 255);
   justify-content: center;
   align-items: center;
@@ -150,6 +171,8 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background-color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
 }
 
 .friends {

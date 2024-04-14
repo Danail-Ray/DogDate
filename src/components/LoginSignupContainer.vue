@@ -3,69 +3,72 @@
     <span class="icon-close" @click="hideWrapper"><ion-icon name="close"></ion-icon></span>
     <div class="form-box login" v-if="loginActive">
       <h2>Login</h2>
-      
-        <div class="input-box">
-          <span class="icon"><ion-icon name="mail"></ion-icon></span>
-          <input type="email" v-model="loginEmail" required />
-          <label>Email</label>
-        </div>
-        <div class="input-box">
-          <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-          <input type="password" v-model="loginPassword" required />
-          <label>Password</label>
-        </div>
-        <div class="remember-forgot">
-          <label><input type="checkbox" />Remember me</label>
-          <a href="#">Forgot Password?</a>
-        </div>
-        <button class="btn" @click="signIn">Login</button>
-        <div class="login-register">
-          <p>
-            Don't have an account?
-            <a href="#" class="register-link" @click="loginActive = false">Register</a>
-          </p>
-        </div>
-      
+
+      <div class="input-box">
+        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+        <input type="email" v-model="loginEmail" required />
+        <label>Email</label>
+      </div>
+      <div class="input-box">
+        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+        <input type="password" v-model="loginPassword" required />
+        <label>Password</label>
+      </div>
+      <div class="remember-forgot">
+        <label><input type="checkbox" />Remember me</label>
+        <a href="#">Forgot Password?</a>
+      </div>
+      <button class="btn" @click="signIn">Login</button>
+      <div class="login-register">
+        <p>
+          Don't have an account?
+          <a href="#" class="register-link" @click="loginActive = false">Register</a>
+        </p>
+      </div>
     </div>
 
     <div class="form-box register" v-if="!loginActive">
       <h2>Registration</h2>
-        <div class="input-box">
-          <span class="icon"><ion-icon name="person"></ion-icon></span>
-          <input type="text" v-model="username" required />
-          <label>Username</label>
-        </div>
-        <div class="input-box">
-          <span class="icon"><ion-icon name="mail"></ion-icon></span>
-          <input type="email" v-model="email" required />
-          <label>Email</label>
-        </div>
-        <div class="input-box">
-          <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-          <input type="password" v-model="password" required />
-          <label>Password</label>
-        </div>
-        <div class="remember-forgot">
-          <label><input type="checkbox" />I aggree to the terms & conditions</label>
-        </div>
-        <button class="btn" @click="register">Register</button>
-        <div class="login-register">
-          <p>
-            Already have an account?
-            <a href="#" class="login-link" @click="loginActive = true">Login</a>
-          </p>
-        </div>
+      <div class="input-box">
+        <span class="icon"><ion-icon name="person"></ion-icon></span>
+        <input type="text" v-model="username" required />
+        <label>Username</label>
+      </div>
+      <div class="input-box">
+        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+        <input type="email" v-model="email" required />
+        <label>Email</label>
+      </div>
+      <div class="input-box">
+        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+        <input type="password" v-model="password" required />
+        <label>Password</label>
+      </div>
+      <div class="remember-forgot">
+        <label><input type="checkbox" />I aggree to the terms & conditions</label>
+      </div>
+      <button class="btn" @click="register">Register</button>
+      <div class="login-register">
+        <p>
+          Already have an account?
+          <a href="#" class="login-link" @click="loginActive = true">Login</a>
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth'
-import { getFirestore, collection, addDoc, doc, setDoc  } from 'firebase/firestore'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged
+} from 'firebase/auth'
+import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'vue-router'
-import * as firebase from "firebase/app"; 
-import 'firebase/firestore';
 
 const loginActive = ref(true)
 
@@ -82,23 +85,25 @@ const router = useRouter()
 const auth = getAuth()
 const user = ref(auth.currentUser)
 
-const db = getFirestore();
+const db = getFirestore()
 
 const register = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
       // Update user profile
       updateProfile(userCredential.user, {
-        displayName: username.value        
-      }).then(() => {
-        // Store user data in Firestore
-        addUserToFirestore(userCredential.user.uid, username.value, email.value)
-        // Signed in
-        localStorage.setItem('displayName', username.value);
-        router.push("/dashboard/" + username.value)
-      }).catch((error) => {
-        console.error("Error updating profile:", error);
-      });
+        displayName: username.value
+      })
+        .then(() => {
+          // Store user data in Firestore
+          addUserToFirestore(userCredential.user.uid, username.value, email.value)
+          // Signed in
+          localStorage.setItem('displayName', username.value)
+          router.push('/dashboard/' + username.value)
+        })
+        .catch((error) => {
+          console.error('Error updating profile:', error)
+        })
     })
     .catch((error) => {
       const errorCode = error.code
@@ -109,11 +114,18 @@ const register = () => {
 
 const addUserToFirestore = (uid: String, displayName: String, email: String) => {
   // Add a new document with a generated id to the "users" collectio
-  setDoc(doc(db, "profiles", `${uid}`), {
-  name: displayName,
-  uid: uid,
-  email: email,
-});
+  setDoc(doc(db, 'profiles', `${uid}`), {
+    name: displayName,
+    uid: uid,
+    email: email,
+    hasDog: false,
+    dog: {
+      name: '',
+      breed: '',
+      age: 0
+    },
+    age: ''
+  })
 }
 
 const loginEmail = ref('')
@@ -121,19 +133,17 @@ const loginPassword = ref('')
 
 const signIn = () => {
   signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
-    .then((userCredential: { user: any; }) => {
-      // Signed in 
-      const user = userCredential.user;
-      localStorage.setItem('displayName', user.uid.username);
+    .then((userCredential: { user: any }) => {
+      // Signed in
+      const user = userCredential.user
+      localStorage.setItem('displayName', user.uid.username)
       router.push(`/dashboard/${user.displayName}`)
     })
-    .catch((error: { code: any; message: any; }) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
+    .catch((error: { code: any; message: any }) => {
+      const errorCode = error.code
+      const errorMessage = error.message
     })
 }
-
-
 
 // Load Ionicons script dynamically when the component is mounted
 const ioniconsScript = document.createElement('script')
@@ -214,8 +224,8 @@ document.head.appendChild(ioniconsNoModuleScript)
   transition: 0.5s;
 }
 
-.input-box input:focus~label,
-.input-box input:valid~label {
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
   top: -5px;
 }
 

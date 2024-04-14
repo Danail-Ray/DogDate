@@ -54,7 +54,18 @@
               </div>
             </div>
             <div class="middle-section"></div>
-            <div class="bottom-section"></div>
+            <div class="bottom-section">
+              <div class="input-container">
+                <div class="upload-foto">
+                  <div class="icons">
+                    <i class="pi pi-image" style="color: slateblue"></i>
+                  </div>
+                </div>
+                <div class="input-text">
+                  <input type="text" placeholder="Search fruits..." />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -64,43 +75,33 @@
 
 <script setup lang="ts">
 import Header from '../components/GlobalHeader.vue'
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { getAuth } from 'firebase/auth'
-import { onMounted } from 'vue'
-
 import 'primeicons/primeicons.css'
+import * as admin from 'firebase-admin'
 
-// const auth = getAuth()
-// const user = ref(auth.currentUser)
-// const username = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
+const auth = getAuth()
+const user = ref(auth.currentUser)
+const username = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
 
 
-//NEEDS FIX: After new chat has been started, make it bigger
-onMounted(() => {
-  // This code will execute after the component has been mounted
-
-  // Get the parent element
-  const container = document.getElementById('openChats')
-
-  // Check if the container exists
-  if (container) {
-    // Count the number of child elements
-    const numberOfChildren = container.children.length
-    if (numberOfChildren > 0) {
-      const currentHeight = container.clientHeight
-      console.log(`Height of container: ${currentHeight}px`)
-      const newHeight = numberOfChildren * 65 + 100
-      container.style.height = `${newHeight}px`
-      console.log(`Height of container: ${container.style.height}`)
-    }
-    console.log(`Number of child elements: ${numberOfChildren}`)
-  } else {
-    console.log('Parent element not found')
-  }
-})
 </script>
 
 <style scoped>
+.input-text {
+  background-color: rgb(223, 246, 255);
+  position: relative; /* Ensure relative positioning for the transform */
+  transform: translate(500px, -30px); /* Move the item 20px to the right and 20px up */
+}
+
+.upload-foto {
+  width: 100%;
+  background-color: rgb(223, 246, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(0px, 20px); /* Move the item 20px to the right and 20px up */
+}
 
 .top-section {
   width: 100%;
@@ -110,15 +111,16 @@ onMounted(() => {
 
 .middle-section {
   width: 100%;
-  height: 600px;
+  height: 620px;
   background-color: rgb(255, 255, 255);
 }
 
 .bottom-section {
   width: 100%;
-  height: 232px;
+  height: 212px;
   background-color: rgb(223, 246, 255);
-
+  display: flex;
+  flex-direction: row;
 }
 
 .is-active {
@@ -137,9 +139,12 @@ onMounted(() => {
   height: 100%;
   width: 400px;
   padding-left: 150px;
+  color: rgb(0, 0, 0);
 }
 
-
+.username H1 {
+  color: black; /* Change text color of input to black */
+}
 
 .dummy-chat {
   height: 100px;
@@ -154,7 +159,7 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.searchbar input[type='text'] {
+input[type='text'] {
   color: black; /* Change text color of input to black */
 }
 
@@ -249,7 +254,6 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-  flex-direction: column;
 }
 
 .icon-container {

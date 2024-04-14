@@ -3,11 +3,15 @@
     <h1 class="logo">DogDate</h1>
     <nav class="naviagtion">
       <RouterLink to="/">Blog</RouterLink>
-      <RouterLink to="/landing">Search</RouterLink>
+      <RouterLink to="/search">Search</RouterLink>
       <RouterLink to="/chat">Chats</RouterLink>
-      <RouterLink to="/dashboard">Profile</RouterLink>
       <template v-if="user">
-        <Button class="logout-button" @click="signOutUser">Logout: {{displayName}}</Button>
+        <RouterLink :to="`/dashboard/${displayName}`">My Profile</RouterLink>
+      </template>
+      <template v-else>
+      </template>
+      <template v-if="user">
+        <Button class="logout-button" @click="signOutUser">Log out</Button>
       </template>
 
       <template v-if="!user">
@@ -26,7 +30,6 @@ import LoginSignupContainer from '../components/LoginSignupContainer.vue'
 
 const showLoginSignup = ref(false)
 
-
 const toggleLoginSignup = () => {
   showLoginSignup.value = !showLoginSignup.value
 }
@@ -37,8 +40,7 @@ import { useRouter } from 'vue-router'
 const auth = getAuth()
 const user = ref(auth.currentUser)
 const router = useRouter()
-const displayName = user.value?.displayName || ref(localStorage.getItem('displayName') || '');
-
+const displayName = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
 
 const signOutUser = () => {
   signOut(auth)
@@ -46,12 +48,10 @@ const signOutUser = () => {
       user.value = null
       router.push('/')
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('Sign out error:', error.message)
     })
 }
-
-
 </script>
 
 <style scoped>
@@ -181,4 +181,5 @@ const signOutUser = () => {
     align-items: center;
     z-index: 99;
   }
-}</style>
+}
+</style>

@@ -62,7 +62,10 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth'
+import { getFirestore, collection, addDoc, doc, setDoc  } from 'firebase/firestore'
 import { useRouter } from 'vue-router'
+import * as firebase from "firebase/app"; 
+import 'firebase/firestore';
 
 const loginActive = ref(true)
 
@@ -79,21 +82,38 @@ const router = useRouter()
 const auth = getAuth()
 const user = ref(auth.currentUser)
 
+const db = getFirestore();
+
 const register = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then((userCredential: { user: any; }) => {
+    .then((userCredential) => {
+      // Update user profile
       updateProfile(userCredential.user, {
         displayName: username.value        
-      })
-      // Signed in
-      localStorage.setItem('displayName', username.value);
-      router.push("/")
+      }).then(() => {
+        // Store user data in Firestore
+        addUserToFirestore(userCredential.user.uid, username.value, email.value)
+        // Signed in
+        localStorage.setItem('displayName', username.value);
+        router.push("/dashboard/" + username.value)
+      }).catch((error) => {
+        console.error("Error updating profile:", error);
+      });
     })
-    .catch((error: { code: any; message: any; }) => {
+    .catch((error) => {
       const errorCode = error.code
       const errorMessage = error.message
-      // ..
+      // Handle errors
     })
+}
+
+const addUserToFirestore = (uid: String, displayName: String, email: String) => {
+  // Add a new document with a generated id to the "users" collectio
+  setDoc(doc(db, "profiles", `${uid}`), {
+  name: displayName,
+  uid: uid,
+  email: email,
+});
 }
 
 const loginEmail = ref('')
@@ -104,7 +124,8 @@ const signIn = () => {
     .then((userCredential: { user: any; }) => {
       // Signed in 
       const user = userCredential.user;
-      router.push("/dashboard")
+      localStorage.setItem('displayName', user.uid.username);
+      router.push(`/dashboard/${user.displayName}`)
     })
     .catch((error: { code: any; message: any; }) => {
       const errorCode = error.code;

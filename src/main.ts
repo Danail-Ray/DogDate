@@ -15,6 +15,7 @@ import 'primevue/resources/themes/aura-light-green/theme.css' // Theme
 
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'; // Import getFirestore to initialize Firestore
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -61,5 +62,7 @@ onAuthStateChanged(auth, (user) => {
     console.log('User is signed out')
   }
 })
+
 export default auth
 export { auth }
+export const db = getFirestore(init);

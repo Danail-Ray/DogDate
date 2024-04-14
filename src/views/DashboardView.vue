@@ -8,7 +8,7 @@
   </div>
   <nav>
     <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/dashboard">Dashboard</RouterLink>
+    <RouterLink to="/chat">Add Friend! Start chatting...</RouterLink>
   </nav>
 </template>
 

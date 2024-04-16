@@ -2,14 +2,16 @@
   <div class="header">
     <h1 class="logo">DogDate</h1>
     <nav class="naviagtion">
+      <template v-if="!locData">
+        <Button class="logout-button" @click="shareLocation">Share Location?</Button>
+      </template>
       <RouterLink to="/">Blog</RouterLink>
       <RouterLink to="/search">Search</RouterLink>
       <RouterLink to="/chat">Chats</RouterLink>
       <template v-if="user">
         <RouterLink :to="`/dashboard/${displayName}`">My Profile</RouterLink>
       </template>
-      <template v-else>
-      </template>
+      <template v-else> </template>
       <template v-if="user">
         <Button class="logout-button" @click="signOutUser">Log out</Button>
       </template>
@@ -36,6 +38,7 @@ const toggleLoginSignup = () => {
 
 import { getAuth, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
+import { getFirestore, doc, setDoc, GeoPoint } from 'firebase/firestore'
 
 const auth = getAuth()
 const user = ref(auth.currentUser)
@@ -51,6 +54,63 @@ const signOutUser = () => {
     .catch((error) => {
       console.error('Sign out error:', error.message)
     })
+}
+
+const db = getFirestore()
+const userUID = user.value?.uid
+
+//check local storage if location has been sent yet
+const locData = ref(localStorage.getItem('location'))
+
+const collectionRef = doc(db, 'profiles', `${userUID}`)
+const currentLocation = ref<{ latitude: number; longitude: number } | null>(null)
+const getCurrentLocation = async (): Promise<void> => {
+  if ('geolocation' in navigator) {
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      })
+      const latitude = position.coords.latitude
+      const longitude = position.coords.longitude
+      currentLocation.value = { latitude, longitude }
+    } catch (error) {
+      console.error('Error getting location:', error)
+    }
+  } else {
+    console.error('Geolocation is not supported.')
+  }
+}
+
+const shareLocation = () => {
+  getCurrentLocation()
+  const location1 = currentLocation.value
+  if (location1) {
+    const { latitude, longitude } = location1
+    const geoPoint = new GeoPoint(latitude, longitude)
+    collectionRef
+    setDoc(
+      doc(db, 'profiles', `${userUID}`),
+      {
+        location: geoPoint
+      },
+      { merge: true }
+    )
+      .then(() => {
+        console.log('Location shared successfully!')
+        console.log(location1)
+        const locationValues = {
+          location: location1
+        }
+        const jsonData = JSON.stringify(locationValues)
+        localStorage.setItem('location', jsonData)
+        console.log(locData)
+        document.cookie = `location=${encodeURIComponent(jsonData)}; expires=${'31.12.2025'}; path=/`
+        location.reload();
+      })
+      .catch((error: { message: any }) => {
+        console.error('Error sharing location:', error.message)
+      })
+  }
 }
 </script>
 

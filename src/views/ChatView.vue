@@ -75,14 +75,13 @@
 
 <script setup lang="ts">
 import Header from '../components/GlobalHeader.vue'
-import { ref, onMounted, watch } from 'vue'
-import { getAuth } from 'firebase/auth'
+// import { ref } from 'vue'
+// import { getAuth } from 'firebase/auth'
 import 'primeicons/primeicons.css'
-import * as admin from 'firebase-admin'
 
-const auth = getAuth()
-const user = ref(auth.currentUser)
-const username = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
+// const auth = getAuth()
+// const user = ref(auth.currentUser)
+// const username = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
 
 
 </script>

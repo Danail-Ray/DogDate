@@ -5,7 +5,6 @@ import App from './App.vue'
 import router from './router'
 
 import 'primeicons/primeicons.css'
-import Button from 'primevue/button' // Import Button component
 import 'primevue/resources/primevue.min.css' // Core CSS
 import 'primevue/resources/themes/aura-dark-green/theme.css' // Theme
 import 'primevue/resources/themes/aura-light-green/theme.css' // Theme

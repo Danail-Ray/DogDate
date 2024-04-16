@@ -65,9 +65,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  onAuthStateChanged
 } from 'firebase/auth'
-import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore'
+import { getFirestore, doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'vue-router'
 
 const loginActive = ref(true)
@@ -84,7 +83,6 @@ const password = ref('')
 const router = useRouter()
 const auth = getAuth()
 const user = ref(auth.currentUser)
-
 const db = getFirestore()
 
 const register = () => {
@@ -96,7 +94,11 @@ const register = () => {
       })
         .then(() => {
           // Store user data in Firestore
-          addUserToFirestore(userCredential.user.uid, username.value, email.value)
+          addUserToFirestore(
+            userCredential.user.uid,
+            username.value,
+            email.value,
+          )
           // Signed in
           localStorage.setItem('displayName', username.value)
           router.push('/dashboard/' + username.value)
@@ -108,11 +110,15 @@ const register = () => {
     .catch((error) => {
       const errorCode = error.code
       const errorMessage = error.message
-      // Handle errors
+      console.error('Error creating user:', errorCode, errorMessage)
     })
 }
 
-const addUserToFirestore = (uid: String, displayName: String, email: String) => {
+const addUserToFirestore = (
+  uid: String,
+  displayName: String,
+  email: String,
+) => {
   // Add a new document with a generated id to the "users" collectio
   setDoc(doc(db, 'profiles', `${uid}`), {
     name: displayName,
@@ -122,9 +128,10 @@ const addUserToFirestore = (uid: String, displayName: String, email: String) => 
     dog: {
       name: '',
       breed: '',
-      age: 0
+      age: 0,
+      image_source: ''
     },
-    age: ''
+    age: '',
   })
 }
 
@@ -142,6 +149,7 @@ const signIn = () => {
     .catch((error: { code: any; message: any }) => {
       const errorCode = error.code
       const errorMessage = error.message
+      console.error('Error signing in:', errorCode, errorMessage)
     })
 }
 

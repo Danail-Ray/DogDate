@@ -25,17 +25,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore'
-import { getDocs, query, where } from 'firebase/firestore'
+import { getFirestore, collection} from 'firebase/firestore'
+import { getDocs, query } from 'firebase/firestore'
 
 const db = getFirestore()
-
 const users = ref<string[]>([])
+const user = getAuth().currentUser
 
-// Function to get data from Firestore
+// Function to get data from Fires  tore
 const getDataFromFirestore = async () => {
+  if (!user) {
+    return
+  }
+
   try {
     // Reference to the collection
     const collectionRef = collection(db, 'profiles')
@@ -48,7 +52,7 @@ const getDataFromFirestore = async () => {
 
     // Extract data from each document
     querySnapshot.forEach((doc) => {
-      users.value.push(doc.data().uid)
+      users.value.push(doc.data().name)
       console.log(doc.id, ' => ', doc.data())
     })
   } catch (error) {

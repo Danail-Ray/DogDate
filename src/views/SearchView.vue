@@ -18,7 +18,8 @@
     <div class="users-list">
       <h3>Users</h3>
       <ul>
-        <li v-for="(user, index) in users" :key="index">{{ user }}</li>
+        <div class="dogCards">
+        </div>
       </ul>
     </div>
   </div>
@@ -29,6 +30,7 @@ import { ref } from 'vue'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, collection} from 'firebase/firestore'
 import { getDocs, query } from 'firebase/firestore'
+
 
 const db = getFirestore()
 const users = ref<string[]>([])

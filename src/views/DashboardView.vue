@@ -54,77 +54,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { getAuth, signOut } from 'firebase/auth'
-import { useRouter } from 'vue-router'
-import { getFirestore, doc, setDoc, GeoPoint } from 'firebase/firestore'
 import Header from '../components/GlobalHeader.vue'
 
-const router = useRouter()
-const auth = getAuth()
-const user = ref(auth.currentUser)
-
-const displayName = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
-const signOutUser = () => {
-  signOut(auth)
-    .then(() => {
-      user.value = null
-      router.push('/')
-    })
-    .catch((error: { message: any }) => {
-      console.error('Sign out error:', error.message)
-    })
-}
-
-const currentLocation = ref<{ latitude: number; longitude: number } | null>(null)
-const getCurrentLocation = async (): Promise<void> => {
-  if ('geolocation' in navigator) {
-    try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-      })
-      const latitude = position.coords.latitude
-      const longitude = position.coords.longitude
-      currentLocation.value = { latitude, longitude }
-    } catch (error) {
-      console.error('Error getting location:', error)
-    }
-  } else {
-    console.error('Geolocation is not supported.')
-  }
-}
-
-const db = getFirestore()
-const userUID = user.value?.uid
-const collectionRef = doc(db, 'profiles', `${userUID}`)
-
-const shareLocation = () => {
-  getCurrentLocation()
-  const location = currentLocation.value
-  if (location) {
-    const { latitude, longitude } = location
-    const geoPoint = new GeoPoint(latitude, longitude)
-    collectionRef
-    setDoc(
-      doc(db, 'profiles', `${userUID}`),
-      {
-        location: geoPoint
-      },
-      { merge: true }
-    )
-      .then(() => {
-        console.log('Location shared successfully!')
-        console.log(location)
-      })
-      .catch((error: { message: any }) => {
-        console.error('Error sharing location:', error.message)
-      })
-  }
-}
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+
 
 body {
   width: 100%;
@@ -133,6 +70,7 @@ body {
   box-sizing: border-box;
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
+  color: red;
 }
 
 ul {

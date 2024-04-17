@@ -44,7 +44,7 @@ const props = defineProps({
 
 const router = useRouter()
 const goToProfile = () => {
-  router.push({ path: `/dashboard/${props.name}` })
+  router.push({ name: 'dashboard', params: { username: props.name } })
 }
 </script>
 

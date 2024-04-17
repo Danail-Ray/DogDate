@@ -10,7 +10,7 @@
             <img src="" alt="Anna Smith" />
             <span></span>
           </div>
-          <h2>Anna Smith</h2>
+          <h2>{{username}}</h2>
           <p>UX/UI Designer</p>
           <p>anna@example.com</p>
 
@@ -64,10 +64,16 @@ import Header from '../components/GlobalHeader.vue'
 
 import {getAuth} from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-const db = getFirestore()
-const user = getAuth().currentUser
+const username = ref('');
+const route = useRoute();
 
+onMounted(() => {
+  username.value = Array.isArray(route.params.username) ? route.params.username[0] : route.params.username;
+  // Use the username to fetch data or render the dashboard accordingly
+});
 
 
 </script>
@@ -75,7 +81,9 @@ const user = getAuth().currentUser
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-
+h2 {
+  color: rgb(0, 0, 0); 
+}
 
 body {
   width: 100%;  

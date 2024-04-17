@@ -27,7 +27,6 @@ import firebaseConfig from '../data'; // Import the Firebase configuration
 
 
 // Initialize Firebase
-
 const init = initializeApp(firebaseConfig)
 // const analytics = getAnalytics(init);
 

@@ -10,7 +10,9 @@
       <!-- <RouterLink to="/search">Search</RouterLink> -->
       <RouterLink to="/chat">Chats</RouterLink>
       <template v-if="user">
-        <RouterLink :to="`/dashboard/${displayName}`" @click="reloadPage">My Profile</RouterLink>
+        <RouterLink :to="`/dashboard/${displayName}`" @click="reloadDashboardPage"
+          >My Profile</RouterLink
+        >
       </template>
       <template v-else> </template>
       <template v-if="user">
@@ -44,14 +46,17 @@ import { getFirestore, doc, setDoc, GeoPoint } from 'firebase/firestore'
 const auth = getAuth()
 const user = ref(auth.currentUser)
 const router = useRouter()
-const displayName = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
+const displayName = user.value?.displayName
 
 const landingPage = () => {
   router.push('/')
 }
 
-const reloadPage = () => {
-  location.reload()
+const reloadDashboardPage = () => {
+  router.push({ name: 'dashboard', params: { username: displayName } }).then(() => {
+    // Reload the page after navigation is complete
+    window.location.reload()
+  })
 }
 
 const signOutUser = () => {
@@ -114,7 +119,7 @@ const shareLocation = () => {
         localStorage.setItem('location', jsonData)
         console.log(locData)
         document.cookie = `location=${encodeURIComponent(jsonData)}; expires=${'31.12.2025'}; path=/`
-        location.reload();
+        location.reload()
       })
       .catch((error: { message: any }) => {
         console.error('Error sharing location:', error.message)

@@ -10,7 +10,7 @@
       <!-- <RouterLink to="/search">Search</RouterLink> -->
       <RouterLink to="/chat">Chats</RouterLink>
       <template v-if="user">
-        <RouterLink :to="`/dashboard/${displayName}`">My Profile</RouterLink>
+        <RouterLink :to="`/dashboard/${displayName}`" @click="reloadPage">My Profile</RouterLink>
       </template>
       <template v-else> </template>
       <template v-if="user">
@@ -48,6 +48,10 @@ const displayName = user.value?.displayName || ref(localStorage.getItem('display
 
 const landingPage = () => {
   router.push('/')
+}
+
+const reloadPage = () => {
+  location.reload()
 }
 
 const signOutUser = () => {

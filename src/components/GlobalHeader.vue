@@ -1,9 +1,9 @@
 <template>
   <div class="header">
-    <h1 class="logo">DogDate</h1>
+    <h1 class="logo" @click="landingPage">DogDate</h1>
     <nav class="naviagtion">
       <template v-if="!locData">
-        <Button class="logout-button" @click="shareLocation">Share Location?</Button>
+        <button class="logout-button" @click="shareLocation">Share Location?</button>
       </template>
       <RouterLink to="/">Blog</RouterLink>
       <RouterLink to="/cards">Cards</RouterLink>
@@ -14,7 +14,7 @@
       </template>
       <template v-else> </template>
       <template v-if="user">
-        <Button class="logout-button" @click="signOutUser">Log out</Button>
+        <button class="logout-button" @click="signOutUser">Log out</button>
       </template>
 
       <template v-if="!user">
@@ -45,6 +45,10 @@ const auth = getAuth()
 const user = ref(auth.currentUser)
 const router = useRouter()
 const displayName = user.value?.displayName || ref(localStorage.getItem('displayName') || '')
+
+const landingPage = () => {
+  router.push('/')
+}
 
 const signOutUser = () => {
   signOut(auth)
@@ -151,6 +155,7 @@ const shareLocation = () => {
   color: #fff;
   user-select: none;
   font-family: var(--Lora);
+  cursor: pointer;
 }
 
 .naviagtion a {

@@ -3,12 +3,12 @@
     <div class="card">
       <div class="card-inner">
         <div class="front">
-          <h2>Username Name</h2>
+          <h2>{{ name }}</h2>
           <p>Brown little shit dog!</p>
           <button>Hover me!</button>
         </div>
         <div class="back">
-          <h1>Username <span> Name</span></h1>
+          <h1>Username</h1>
           <p>Oqweohj qowioqwe oqiwueoq e oqwiejoq w</p>
           <div class="row">
             <div class="col">
@@ -24,7 +24,7 @@
               <p>Followers</p>
             </div>
             <div class="row">
-              <button>Chat me!</button>
+              <button>Profile</button>
             </div>
           </div>
         </div>
@@ -33,7 +33,15 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { defineProps } from 'vue';
+
+// Define props
+const props = defineProps({
+  name: String
+});
+
+</script>
 
 <style scope>
 .card {

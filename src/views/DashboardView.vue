@@ -64,7 +64,7 @@ import Header from '../components/GlobalHeader.vue'
 
 
 body {
-  width: 100%;
+  width: 100%;  
   margin: 0;
   padding: 0;
   box-sizing: border-box;

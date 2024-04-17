@@ -70,6 +70,7 @@ const username = ref('')
 const route = useRoute()
 
 onMounted(() => {
+  username.value = '';
   username.value = Array.isArray(route.params.username)
     ? route.params.username[0]
     : route.params.username

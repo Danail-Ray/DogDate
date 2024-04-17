@@ -38,15 +38,21 @@
         <div class="right__col">
           <nav>
             <ul>
-              <li><a href="">photos</a></li>
-              <li><a href="">galleries</a></li>
-              <li><a href="">groups</a></li>
-              <li><a href="">about</a></li>
+              <li><a href="#">photos</a></li>
+              <li><a href="#">galleries</a></li>
+              <li><a href="#">groups</a></li>
+              <li><a href="#">about</a></li>
             </ul>
             <button>Follow</button>
           </nav>
 
           <div class="photos">
+            <img src="" alt="Photo 1" />
+            <img src="" alt="Photo 2" />
+            <img src="" alt="Photo 3" />
+            <img src="" alt="Photo 4" />
+            <img src="" alt="Photo 5" />
+            <img src="" alt="Photo 6" />
           </div>
         </div>
       </div>
@@ -55,6 +61,14 @@
 
 <script setup lang="ts">
 import Header from '../components/GlobalHeader.vue'
+
+import {getAuth} from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'
+
+const db = getFirestore()
+const user = getAuth().currentUser
+
+
 
 </script>
 
@@ -87,8 +101,8 @@ a {
 
 .header__wrapper header {
   width: 100%;
-  background: url('../img/bg.jpeg') no-repeat 50% 20% / cover;
-  min-height: calc(100px + 15vw);
+  background: url('../assets/bg.avif') no-repeat 50% 20% / cover;
+  min-height: calc(100px + 10vw);
 }
 
 .header__wrapper .cols__container .left__col {

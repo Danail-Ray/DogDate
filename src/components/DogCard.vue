@@ -24,7 +24,7 @@
               <p>Followers</p>
             </div>
             <div class="row">
-              <button>Profile</button>
+              <button @click="goToProfile">Profile</button>
             </div>
           </div>
         </div>
@@ -34,13 +34,18 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 
 // Define props
 const props = defineProps({
   name: String
-});
+})
 
+const router = useRouter()
+const goToProfile = () => {
+  router.push({ path: `/dashboard/${props.name}` })
+}
 </script>
 
 <style scope>

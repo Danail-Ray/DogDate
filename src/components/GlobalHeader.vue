@@ -7,7 +7,7 @@
       </template>
       <RouterLink to="/">Blog</RouterLink>
       <RouterLink to="/cards">Cards</RouterLink>
-      <RouterLink to="/search">Search</RouterLink>
+      <!-- <RouterLink to="/search">Search</RouterLink> -->
       <RouterLink to="/chat">Chats</RouterLink>
       <template v-if="user">
         <RouterLink :to="`/dashboard/${displayName}`">My Profile</RouterLink>

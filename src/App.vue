@@ -1,38 +1,44 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import Header from './components/GlobalHeader.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="main">
-    <Header />
+  <div class="main-container">
+    <RouterView />
   </div>
-  <!-- <header> 
-  <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView /> -->
 </template>
 
 <style>
+@import url('./assets/style.css');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+
+:root {
+  --Lora: 'Lora Medium', serif;
+  --Gilroy: 'Gilroy Bold', sans-serif;
+  /* --global-font-size: 0.8rem;
+    --global-text-color: #222;
+    --global-primary-title-size: 2rem;
+    --global-color-primary: #88498f;
+    --global-color-secondary: #779fa1;
+    --global-color-warning: #e28413;
+    --global-color-danger: #ff6542; */
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  scrollbar-width: none;
+  color: #ffffff;
 }
 
-.main {
-  min-height: 100vh;
-  background: url(./assets/home-bg.jpg) no-repeat;
-  background-size: cover;
-  background-position: center;
+.main-container {
+  position: relative; /* Ensure the main container is positioned relative */
+}
+
+::selection {
+  color: #fbd784;
+  background: none;
 }
 </style>

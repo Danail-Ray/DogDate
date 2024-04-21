@@ -106,7 +106,9 @@ const goToProfile = () => {
 }
 
 .back {
-  background: #dfb5b5;
+  background: url('../assets/home-mountain.jpg');
+  background-size: cover;
+  background-position: center;
   color: #333;
   padding: 20px 40px;
   transform: rotateY(180deg);
@@ -167,6 +169,8 @@ const goToProfile = () => {
 }
 
 .card:hover .card-inner {
+  cursor: pointer;
+  transition-delay: 0.3s;
   transform: rotateY(180deg);
 }
 </style>

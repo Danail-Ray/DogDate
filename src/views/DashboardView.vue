@@ -1,57 +1,56 @@
 <template>
-  <div class="header">
+  <div class="background">
     <Header></Header>
-  </div>
-  <div class="header__wrapper">
-    <header></header>
-    <div class="cols__container">
-      <div class="left__col">
-        <div class="img__container">
-          <img src="" alt="Anna Smith" />
-          <span></span>
-        </div>
-        <h2>{{ username }}</h2>
-        <p>UX/UI Designer</p>
-        <p>anna@example.com</p>
+    <div class="header__wrapper">
+      <div class="cols__container">
+        <div class="left__col">
+          <div class="img__container">
+            <img src="" alt="Anna Smith" />
+            <span></span>
+          </div>
+          <h2>{{ username }}</h2>
+          <p>UX/UI Designer</p>
+          <p>anna@example.com</p>
 
-        <ul class="about">
-          <li><span>4,073</span>Followers</li>
-          <li><span>322</span>Following</li>
-          <li><span>200,543</span>Attraction</li>
-        </ul>
-
-        <div class="content">
-          <p>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam erat volutpat. Morbi
-            imperdiet, mauris ac auctor dictum, nisl ligula egestas nulla.
-          </p>
-
-          <ul>
-            <li><i class="fab fa-twitter"></i></li>
-            <i class="fab fa-pinterest"></i>
-            <i class="fab fa-facebook"></i>
-            <i class="fab fa-dribbble"></i>
+          <ul class="about">
+            <li><span>4,073</span>Followers</li>
+            <li><span>322</span>Following</li>
+            <li><span>200,543</span>Attraction</li>
           </ul>
-        </div>
-      </div>
-      <div class="right__col">
-        <nav>
-          <ul>
-            <li><a href="#">photos</a></li>
-            <li><a href="#">galleries</a></li>
-            <li><a href="#">groups</a></li>
-            <li><a href="#">about</a></li>
-          </ul>
-          <button>Follow</button>
-        </nav>
 
-        <div class="photos">
-          <img src="" alt="Photo 1" />
-          <img src="" alt="Photo 2" />
-          <img src="" alt="Photo 3" />
-          <img src="" alt="Photo 4" />
-          <img src="" alt="Photo 5" />
-          <img src="" alt="Photo 6" />
+          <div class="content">
+            <p>
+              Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam erat volutpat. Morbi
+              imperdiet, mauris ac auctor dictum, nisl ligula egestas nulla.
+            </p>
+
+            <ul>
+              <li><i class="fab fa-twitter"></i></li>
+              <i class="fab fa-pinterest"></i>
+              <i class="fab fa-facebook"></i>
+              <i class="fab fa-dribbble"></i>
+            </ul>
+          </div>
+        </div>
+        <div class="right__col">
+          <nav>
+            <ul>
+              <li><a href="#">photos</a></li>
+              <li><a href="#">galleries</a></li>
+              <li><a href="#">groups</a></li>
+              <li><a href="#">about</a></li>
+            </ul>
+            <button>Follow</button>
+          </nav>
+
+          <div class="photos">
+            <img src="" alt="Photo 1" />
+            <img src="" alt="Photo 2" />
+            <img src="" alt="Photo 3" />
+            <img src="" alt="Photo 4" />
+            <img src="" alt="Photo 5" />
+            <img src="" alt="Photo 6" />
+          </div>
         </div>
       </div>
     </div>
@@ -80,6 +79,15 @@ onMounted(() => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+Header {
+  padding: 200px;
+}
+.background {
+  min-height: 100vh;
+  background: url(../assets/home-bg.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
 h2 {
   color: rgb(0, 0, 0);
 }
@@ -91,7 +99,6 @@ body {
   box-sizing: border-box;
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
-  color: red;
 }
 
 ul {
@@ -106,10 +113,9 @@ a {
   text-decoration: none;
 }
 
-.header__wrapper header {
-  width: 100%;
-  background: url('../assets/home-bg.jpg') no-repeat 50% 20% / cover;
-  min-height: calc(100px + 10vw);
+.header__wrapper {
+  margin-top: 100px;
+  background-color: white;
 }
 
 .header__wrapper .cols__container .left__col {
@@ -280,6 +286,6 @@ a {
 }
 
 .header {
-  background-color: rgb(17, 62, 65);
+  background-color: transparent;
 }
 </style>

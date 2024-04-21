@@ -7,11 +7,13 @@
       <div class="left-side">
         <div class="left-button"></div>
       </div>
+
       <div class="cards">
-        <div v-for="(user, index) in users" :key="user">
-          <dogCard v-if="index < 3" :name="user" />
+        <div v-for="user in visibleUsers" :key="user" class="card-container">
+          <dogCard :name="user" />
         </div>
       </div>
+
       <div class="bottom-button">
         <button @click="sliceUsers">Get Data</button>
       </div>
@@ -23,40 +25,31 @@
 import dogCard from '../components/DogCard.vue'
 import Header from '../components/GlobalHeader.vue'
 import { getAuth } from 'firebase/auth'
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { getFirestore, collection, query, limit, getDocs } from 'firebase/firestore'
 
 let users = ref<string[]>([])
 const db = getFirestore()
 const user = getAuth().currentUser
 
-const sliceUsers = () => {
-  users.value = users.value.slice(3)
-
-  if (users.value.length === 0) {
-    getDataFromFirestore()
+const visibleUsers = computed(() => {
+  if (window.innerWidth < 800) {
+    return users.value.slice(0, 1)
+  } else if (window.innerWidth < 1300) {
+    return users.value.slice(0, 2)
+  } else {
+    return users.value.slice(0, 3)
   }
-  return
-}
+})
 
-const getDataFromFirestore = async () => {
-  if (!user) {
-    return
-  }
+const loadMore = async () => {
+  if (!user) return
 
   try {
-    // Reference to the collection
     const collectionRef = collection(db, 'profiles')
-
-    // Query the collection (optional, you can directly pass collectionRef to getDocs)
     const q = query(collectionRef, limit(30))
-
-    // Get documents from the collection
     const querySnapshot = await getDocs(q)
 
-    //clear list
-
-    // Extract data from each document
     querySnapshot.forEach((doc) => {
       users.value.push(doc.data().name)
     })
@@ -65,10 +58,24 @@ const getDataFromFirestore = async () => {
   }
 }
 
-// Call the function to get data
+const sliceUsers = () => {
+  users.value = users.value.slice(3)
+
+  if (users.value.length === 0) {
+    loadMore()
+  }
+}
+
 onBeforeMount(() => {
-  getDataFromFirestore()
-  console.log(users)
+  loadMore()
+})
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth < 800 && visibleUsers.value.length > 1) {
+    users.value = users.value.slice(0, 1)
+  } else if (window.innerWidth < 1300 && visibleUsers.value.length > 2) {
+    users.value = users.value.slice(0, 2)
+  }
 })
 </script>
 
@@ -91,7 +98,6 @@ onBeforeMount(() => {
 
 .header {
   width: 100%;
-  background-color: #7c4242;
   color: #fff;
   display: flex;
   padding: bottom 20px;

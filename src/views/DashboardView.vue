@@ -284,8 +284,4 @@ a {
     margin-top: 0;
   }
 }
-
-.header {
-  background-color: transparent;
-}
 </style>

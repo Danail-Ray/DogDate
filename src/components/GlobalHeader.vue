@@ -241,9 +241,6 @@ const shareLocation = () => {
 
 @media screen and (min-width: 2300px) {
   .header {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: calc(100% - 600px);
     /* Subtract 200px from both sides */
     padding: 20px 100px;
@@ -251,10 +248,6 @@ const shareLocation = () => {
     /* Add 200px margin on the left */
     margin-right: 300px;
     /* Add 200px margin on the right */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 99;
   }
 }
 </style>

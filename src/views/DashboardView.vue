@@ -108,7 +108,7 @@ a {
 
 .header__wrapper header {
   width: 100%;
-  background: url('../assets/bg.avif') no-repeat 50% 20% / cover;
+  background: url('../assets/home-bg.jpg') no-repeat 50% 20% / cover;
   min-height: calc(100px + 10vw);
 }
 

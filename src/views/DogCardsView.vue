@@ -1,18 +1,20 @@
 <template>
-  <div class="container">
-    <div class="header">
-      <Header />
-    </div>
-    <div class="left-side">
-      <div class="left-button"></div>
-    </div>
-    <div class="cards">
-      <div v-for="(user, index) in users" :key="user">
-        <dogCard v-if="index < 3" :name="user" />
+  <div class="background">
+    <div class="container">
+      <div class="header">
+        <Header />
       </div>
-    </div>
-    <div class="bottom-button">
-      <button @click="sliceUsers">Get Data</button>
+      <div class="left-side">
+        <div class="left-button"></div>
+      </div>
+      <div class="cards">
+        <div v-for="(user, index) in users" :key="user">
+          <dogCard v-if="index < 3" :name="user" />
+        </div>
+      </div>
+      <div class="bottom-button">
+        <button @click="sliceUsers">Get Data</button>
+      </div>
     </div>
   </div>
 </template>
@@ -34,9 +36,8 @@ const sliceUsers = () => {
   if (users.value.length === 0) {
     getDataFromFirestore()
   }
-  return 
+  return
 }
-
 
 const getDataFromFirestore = async () => {
   if (!user) {
@@ -48,13 +49,13 @@ const getDataFromFirestore = async () => {
     const collectionRef = collection(db, 'profiles')
 
     // Query the collection (optional, you can directly pass collectionRef to getDocs)
-    const q = query(collectionRef, limit(30));
+    const q = query(collectionRef, limit(30))
 
     // Get documents from the collection
     const querySnapshot = await getDocs(q)
 
     //clear list
-    
+
     // Extract data from each document
     querySnapshot.forEach((doc) => {
       users.value.push(doc.data().name)
@@ -72,6 +73,13 @@ onBeforeMount(() => {
 </script>
 
 <style scoped>
+.background {
+  min-height: 100vh;
+  background: url(../assets/home-bg.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .container {
   width: 100%;
   height: 100vh;
@@ -79,7 +87,6 @@ onBeforeMount(() => {
   flex-direction: column;
   justify-content: center; /* Center vertically */
   align-items: center; /* Center horizontally */
-  background-color: #7c4242;
 }
 
 .header {
@@ -116,5 +123,4 @@ onBeforeMount(() => {
   margin-bottom: 40px;
   transform: translateX(-50px);
 }
-
 </style>

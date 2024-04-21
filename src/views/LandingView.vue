@@ -50,6 +50,8 @@ import Header from '../components/GlobalHeader.vue'
     </div>
     <div class="content-wrapper content">
       <div class="grid">
+        <img src="../assets/home-lake.jpg" id="w-node-12f012158464-0b7ceb38" alt="" class="image" />
+
         <div id="w-node-12f012158455-0b7ceb38" class="content-text">
           <div class="count">02</div>
           <div class="tagline">
@@ -68,7 +70,6 @@ import Header from '../components/GlobalHeader.vue'
             <i class="pi pi-arrow-right"></i>
           </a>
         </div>
-        <img src="../assets/home-lake.jpg" id="w-node-12f012158464-0b7ceb38" alt="" class="image" />
       </div>
     </div>
     <div class="content-wrapper content">
@@ -114,9 +115,7 @@ import Header from '../components/GlobalHeader.vue'
           </div>
           <div class="copyright">
             Copyright 2024 DogDate, Inc. Terms &amp; Privacy<br />A concept by
-            <a href="https://watchr.netlify.app/" target="_blank" class="author"
-              >Danail Raykov</a
-            >
+            <a href="https://watchr.netlify.app/" target="_blank" class="author">King Sebastian</a>
           </div>
         </div>
         <div id="w-node-4532b953dd02-0b7ceb38" class="footer-right">

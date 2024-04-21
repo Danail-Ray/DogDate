@@ -5,7 +5,7 @@
       <template v-if="!locData">
         <button class="logout-button" @click="shareLocation">Share Location?</button>
       </template>
-      <RouterLink to="/">Blog</RouterLink>
+      <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/cards">Cards</RouterLink>
       <!-- <RouterLink to="/search">Search</RouterLink> -->
       <RouterLink to="/chat">Chats</RouterLink>

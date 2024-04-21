@@ -32,7 +32,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import LoginSignupContainer from '../components/LoginSignupContainer.vue'
-//test
+
 const showLoginSignup = ref(false)
 
 const toggleLoginSignup = () => {

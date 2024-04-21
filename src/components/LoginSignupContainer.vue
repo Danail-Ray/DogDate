@@ -59,12 +59,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  updateProfile,
+  updateProfile
 } from 'firebase/auth'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'vue-router'
@@ -94,11 +94,7 @@ const register = () => {
       })
         .then(() => {
           // Store user data in Firestore
-          addUserToFirestore(
-            userCredential.user.uid,
-            username.value,
-            email.value,
-          )
+          addUserToFirestore(userCredential.user.uid, username.value, email.value)
           // Signed in
           localStorage.setItem('displayName', username.value)
           router.push('/dashboard/' + username.value)
@@ -114,11 +110,7 @@ const register = () => {
     })
 }
 
-const addUserToFirestore = (
-  uid: String,
-  displayName: String,
-  email: String,
-) => {
+const addUserToFirestore = (uid: String, displayName: String, email: String) => {
   // Add a new document with a generated id to the "users" collectio
   setDoc(doc(db, 'profiles', `${uid}`), {
     name: displayName,
@@ -131,7 +123,7 @@ const addUserToFirestore = (
       age: 0,
       image_source: ''
     },
-    age: '',
+    age: ''
   })
 }
 

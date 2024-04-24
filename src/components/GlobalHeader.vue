@@ -53,7 +53,7 @@ const landingPage = () => {
 }
 
 const reloadDashboardPage = () => {
-  router.push({ name: 'dashboard', params: { username: displayName } }).then(() => {
+  router.push({ name: 'dashboard', params: { username: displayName, uid: user.value?.uid} }).then(() => {
     // Reload the page after navigation is complete
     window.location.reload()
   })

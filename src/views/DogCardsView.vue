@@ -7,8 +7,8 @@
       <div class="left-button"></div>
     </div>
     <div class="cards">
-      <div v-for="(user, index) in users" :key="user">
-        <dogCard v-if="index < 3" :name="user" />
+      <div v-for="(user, index) in users" :key="user.uid">
+        <dogCard v-if="index < 3" :name="user.name" :uid="user.uid" />
       </div>
     </div>
     <div class="bottom-button">
@@ -24,20 +24,22 @@ import { getAuth } from 'firebase/auth'
 import { ref, onBeforeMount } from 'vue'
 import { getFirestore, collection, query, limit, getDocs } from 'firebase/firestore'
 
-let users = ref<string[]>([])
-const db = getFirestore()
-const user = getAuth().currentUser
+interface User {
+  name: string
+  uid: string
+}
 
+let users = ref<User[]>([])
+const db = getFirestore()
 const sliceUsers = () => {
   users.value = users.value.slice(3)
-
   if (users.value.length === 0) {
     getDataFromFirestore()
   }
-  return 
+  return
 }
 
-
+const user = getAuth().currentUser
 const getDataFromFirestore = async () => {
   if (!user) {
     return
@@ -48,16 +50,16 @@ const getDataFromFirestore = async () => {
     const collectionRef = collection(db, 'profiles')
 
     // Query the collection (optional, you can directly pass collectionRef to getDocs)
-    const q = query(collectionRef, limit(30));
+    const q = query(collectionRef, limit(30))
 
     // Get documents from the collection
     const querySnapshot = await getDocs(q)
 
     //clear list
-    
+
     // Extract data from each document
     querySnapshot.forEach((doc) => {
-      users.value.push(doc.data().name)
+      users.value.push({ name: doc.data().name, uid: doc.data().uid })
     })
   } catch (error) {
     console.error('Error getting documents:', error)
@@ -67,7 +69,6 @@ const getDataFromFirestore = async () => {
 // Call the function to get data
 onBeforeMount(() => {
   getDataFromFirestore()
-  console.log(users)
 })
 </script>
 
@@ -116,5 +117,4 @@ onBeforeMount(() => {
   margin-bottom: 40px;
   transform: translateX(-50px);
 }
-
 </style>

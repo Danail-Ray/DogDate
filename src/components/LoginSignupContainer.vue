@@ -133,6 +133,12 @@ const addUserToFirestore = (
     },
     age: '',
   })
+
+  setDoc(doc(db, 'images', `${uid}`), {
+    name: displayName,
+    uid: uid,
+    email: email,
+  })
 }
 
 const loginEmail = ref('')

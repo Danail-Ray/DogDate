@@ -71,7 +71,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth && !currentUser) {
     // If the route requires authentication and the user is not logged in, redirect to login page
-    next('/')
+    next('/') 
     return
   } else if ((to.params.username)) {
     // If the route contains a username parameter, check if it exists in Firestore

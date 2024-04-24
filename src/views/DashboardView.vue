@@ -7,7 +7,7 @@
     <div class="cols__container">
       <div class="left__col">
         <div class="img__container">
-          <img src="" alt="Anna Smith" />
+          <img :src="profile_picture" alt="" />
           <span></span>
         </div>
         <h2>{{ username }}</h2>
@@ -65,17 +65,54 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 
 const username = ref('')
 const route = useRoute()
+let profile_picture = ref('')
+const db = getFirestore()
+const user = getAuth()
+
+let uid = ref('')
 
 onMounted(() => {
-  username.value = '';
   username.value = Array.isArray(route.params.username)
     ? route.params.username[0]
     : route.params.username
+
+  uid.value = Array.isArray(route.params.uid) ? route.params.uid[1] : route.params.uid
+
+  uid.value = `${user.currentUser?.uid}`
+
   // Use the username to fetch data or render the dashboard accordingly
+  getDataFromFirestore()
 })
+
+const getDataFromFirestore = async () => {
+  if (!user) {
+    return
+  }
+
+  try {
+    // Reference to the collection
+    const collectionRef = collection(db, 'images')
+
+    console.log('CURENT UID = ' + uid.value)
+
+    // Query the collection (optional, you can directly pass collectionRef to getDocs)
+    const q = query(collectionRef, where('uid', '==', `${uid.value}`))
+
+    // Get documents from the collection
+    const querySnapshot = await getDocs(q)
+
+    // Extract data from each document
+    querySnapshot.forEach((doc) => {
+      profile_picture.value = (doc.id, ' => ', doc.data().profile_picture)
+    })
+  } catch (error) {
+    console.error('Error getting documents:', error)
+  }
+}
 </script>
 
 <style scoped>

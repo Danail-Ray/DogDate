@@ -1,20 +1,20 @@
 import { createPinia } from 'pinia'
-import PrimeVue from 'primevue/config'
+//import PrimeVue from 'primevue/config'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
-import 'primeicons/primeicons.css'
-import 'primevue/resources/primevue.min.css' // Core CSS
-import 'primevue/resources/themes/aura-dark-green/theme.css' // Theme
-import 'primevue/resources/themes/aura-light-green/theme.css' // Theme
+// import 'primeicons/primeicons.css'
+// import 'primevue/resources/primevue.min.css' // Core CSS
+// import 'primevue/resources/themes/aura-dark-green/theme.css' // Theme
+// import 'primevue/resources/themes/aura-light-green/theme.css' // Theme
 
 //Firebase
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'; // Import getFirestore to initialize Firestore
+import { getFirestore } from 'firebase/firestore' // Import getFirestore to initialize Firestore
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -49,14 +49,13 @@ const auth = getAuth(init)
 onAuthStateChanged(auth, (user) => {
   if (user) {
     //user.refreshToken
-    createApp(App).use(createPinia()).use(router).use(PrimeVue).mount('#app')
+    createApp(App).use(createPinia()).use(router).mount('#app')
     console.log('User is signed in:', user)
   } else {
     // // User is signed out.
     const app = createApp(App)
     app.use(createPinia())
     app.use(router)
-    app.use(PrimeVue)
     app.mount('#app')
     console.log('User is signed out')
   }
@@ -64,4 +63,4 @@ onAuthStateChanged(auth, (user) => {
 
 export default auth
 export { auth }
-export const db = getFirestore(init);
+export const db = getFirestore(init)

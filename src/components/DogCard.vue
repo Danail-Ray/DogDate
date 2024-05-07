@@ -1,13 +1,13 @@
 <template>
-  <div class="container">
-    <div class="card">
+  <div class="card-container">
+    <div class="main-card">
       <div class="card-inner">
         <div class="front">
           <h2>{{ name }}</h2>
           <p>Brown little shit dog!</p>
           <button>Hover me!</button>
         </div>
-        <div class="back">
+        <div class="card-back">
           <h1>Username</h1>
           <p>Oqweohj qowioqwe oqiwueoq e oqwiejoq w</p>
           <div class="row">
@@ -49,7 +49,7 @@ const goToProfile = () => {
 </script>
 
 <style scope>
-.card {
+.main-card {
   width: 350px;
   height: 515px;
   margin: 100px auto 0;
@@ -65,7 +65,7 @@ const goToProfile = () => {
 }
 
 .front,
-.back {
+.card-back {
   width: 100%;
   height: 100%;
   border-radius: 15px;
@@ -105,7 +105,7 @@ const goToProfile = () => {
   color: white;
 }
 
-.back {
+.card-back {
   background: url('../assets/home-mountain.jpg');
   background-size: cover;
   background-position: center;
@@ -114,17 +114,17 @@ const goToProfile = () => {
   transform: rotateY(180deg);
 }
 
-.back h1 {
+.card-back h1 {
   font-size: 50px;
   line-height: 55px;
   margin-bottom: 10px;
 }
 
-.back span {
+.card-back span {
   font-weight: 400;
 }
 
-.back p {
+.card-back p {
   font-size: 14px;
   color: #333;
 }
@@ -151,7 +151,7 @@ const goToProfile = () => {
   margin-top: 5px;
 }
 
-.back button {
+.card-back button {
   background: #7800ad;
   color: #fff;
   border: 0;
@@ -168,7 +168,7 @@ const goToProfile = () => {
   margin-bottom: 40px;
 }
 
-.card:hover .card-inner {
+.main-card:hover .card-inner {
   cursor: pointer;
   transition-delay: 0.3s;
   transform: rotateY(180deg);

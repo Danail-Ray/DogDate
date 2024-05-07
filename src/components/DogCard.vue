@@ -159,10 +159,10 @@ const goToProfile = () => {
   padding: 7px 20px;
   border-radius: 30px;
   font-size: 14px;
-  margin-right: 25px;
+  /* margin-right: 25px; */
   box-shadow: 0 8px 10px rgba(120, 0, 173, 0.3);
   cursor: pointer;
-  position: absolute;
+  /* position: absolute; */
   bottom: 0;
   right: 0;
   margin-bottom: 40px;

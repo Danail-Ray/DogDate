@@ -186,29 +186,34 @@ async function fetchData(username: string, currentUserUID: string) {
     // Fetch the profiles collection
     const querySnapshot = await getDocs(q)
     let chattingPartnerUID = ''
+    let chattingPartnerUsername = ''
 
     // Iterate over the documents in the collection
     querySnapshot.forEach((doc) => {
       // Access document data
       chattingPartnerUID = doc.data().uid
+      chattingPartnerUsername = doc.data().name
+      
       // const documentPath = `Messages/${currentUserUID}`
       // const subcollectionPath = `${documentPath}/ChatPartners/${chattingPartnerUID}`
     })
     const documentPath = `Messages/${currentUserUID}`
-    createSubcollection(documentPath, chattingPartnerUID)
+    createSubcollection(documentPath, chattingPartnerUID, chattingPartnerUsername)
   } catch (error) {
     console.error('Error fetching data:', error)
   }
 }
 
-async function createSubcollection(documentPath: string, chattingPartnerUID: string) {
+async function createSubcollection(documentPath: string, chattingPartnerUID: string, username : string) {
   const db = getFirestore()
   try {
     // Define the path to the subcollection
     const subcollectionPath = `${documentPath}/ChatPartners/`
 
     // Use setDoc to create a document at the specified path
-    await setDoc(doc(db, subcollectionPath, chattingPartnerUID), {})
+    await setDoc(doc(db, subcollectionPath, chattingPartnerUID), {
+      name: username
+    })
     console.log('Subcollection created successfully')
   } catch (error) {
     console.error('Error creating subcollection:', error)

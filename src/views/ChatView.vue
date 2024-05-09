@@ -2,50 +2,56 @@
   <div class="gradient">
     <Header />
     <!-- Person selector: this contains buttons for user to select whether to chat as John or Jane -->
-    <div class="person-selector">
-    </div>  
-    <
-    <div class="chat-container">
-      <h2 class="chat-header">John chatting...</h2>
-
-      <div class="chat-messages">
-        <div class="message blue-bg">
-          <div class="message-sender">John</div>
-          <div class="message-text">Hey Jane, what's up?</div>
-          <div class="message-timestamp">10:30 AM</div>
-        </div>
-        <div class="message gray-bg">
-          <div class="message-sender">Jane</div>
-          <div class="message-text">Not much, just living the dream. How about you?</div>
-          <div class="message-timestamp">10:35 AM</div>
-        </div>
+    <div class="content">
+      <div class="person-selector">
+        <button class="person-selector-button active-person">John</button>
+        <button class="person-selector-button">Jane</button>
       </div>
-
-      <form class="chat-input-form">
-        <input type="text" class="chat-input" required placeholder="Type here, John..." />
-        <button type="submit" class="button send-button">Send</button>
-      </form>
-      <button class="button clear-chat-button">Clear Chat</button>
+      <div class="chat-container">
+        <h2 class="chat-header">John chatting...</h2>
+        <div class="chat-messages">
+          <div class="message blue-bg">
+            <div class="message-sender">John</div>
+            <div class="message-text">Hey Jane, what's up?</div>
+            <div class="message-timestamp">10:30 AM</div>
+          </div>
+          <div class="message gray-bg">
+            <div class="message-sender">Jane</div>
+            <div class="message-text">Not much, just living the dream. How about you?</div>
+            <div class="message-timestamp">10:35 AM</div>
+          </div>
+        </div>
+        <form class="chat-input-form">
+          <input type="text" class="chat-input" required placeholder="Type here, John..." />
+          <button type="submit" class="button send-button">Send</button>
+        </form>
+        <button class="button clear-chat-button">Clear Chat</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import Header from '../components/GlobalHeader.vue'
-
 </script>
 
 <style scoped>
 .gradient {
-  background-image: linear-gradient(23deg,
-      hsl(49deg 100% 69%) 0%,
-      hsl(16deg 80% 61%) 2%,
-      hsl(330deg 81% 34%) 12%,
-      hsl(259deg 100% 15%) 50%,
-      hsl(212deg 100% 25%) 88%,
-      hsl(197deg 100% 30%) 98%,
-      hsl(183deg 79% 36%) 100%);
+  background-image: linear-gradient(
+    23deg,
+    hsl(49deg 100% 69%) 0%,
+    hsl(16deg 80% 61%) 2%,
+    hsl(330deg 81% 34%) 12%,
+    hsl(259deg 100% 15%) 50%,
+    hsl(212deg 100% 25%) 88%,
+    hsl(197deg 100% 30%) 98%,
+    hsl(183deg 79% 36%) 100%
+  );
   height: 100vh;
+}
+
+.content {
+  display: flex;
 }
 
 .button {
@@ -64,18 +70,21 @@ import Header from '../components/GlobalHeader.vue'
 }
 
 .person-selector {
-  display: flex;
-  justify-content: center;
-  gap: 1em;
-  margin: 3em auto 1em;
-  max-width: 40em;
+  background: #15202b;
+  font-family: 'Roboto', sans-serif;
+  border-radius: 0.5em;
+  padding: 0.5em 1.25em;
+  margin: auto;
+  max-width: 37.5em;
+  height: 37.5em;
+  box-shadow: 0 0 1.25em 0.5em #c3c3c333;
 }
 
 .person-selector-button {
   width: 100%;
   background-color: #15202b;
   color: #fff;
-  font-size: 1.1em;
+  font-size: 2em;
 }
 
 .active-person {
@@ -172,6 +181,6 @@ import Header from '../components/GlobalHeader.vue'
 
 .clear-chat-button {
   display: block;
-  margin: 2.5em auto;
+  margin: auto;
 }
 </style>

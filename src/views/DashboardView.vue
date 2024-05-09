@@ -18,7 +18,7 @@
                   />
                 </div>
                 <div class="name">
-                  <h3 class="title">Sebastian Missler</h3>
+                  <h3 class="title">{{username}}</h3>
                   <h6>Senior Fullstack Developer</h6>
                   <a href="#pablo" class="btn btn-just-icon btn-link btn-dribbble"
                     ><i class="fa fa-dribbble"></i

@@ -33,6 +33,36 @@
 
 <script setup lang="ts">
 import Header from '../components/GlobalHeader.vue'
+import { getAuth } from 'firebase/auth'
+import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore'
+
+const auth = getAuth()
+const user = auth.currentUser
+// Get the current user's UID
+const currentUserUID = user?.uid
+console.log(currentUserUID)
+
+async function getData(currentUserUID: string | undefined) {
+  const db = getFirestore()
+  try {
+    // Get a reference to the document
+    const q = collection(db, 'Messages', `${currentUserUID}`, 'ChatPartners')
+    const querySnapshot = await getDocs(q)
+
+    querySnapshot.forEach((doc) => {
+      let chattingpartnerUID = doc.id
+      let chattingPartnerUsername = doc.data().name
+
+
+
+      
+    })
+  } catch (error) {
+    console.error('Error getting document:', error)
+  }
+}
+
+getData(currentUserUID)
 </script>
 
 <style scoped>

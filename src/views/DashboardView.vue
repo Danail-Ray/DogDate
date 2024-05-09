@@ -1,9 +1,6 @@
 <template>
   <div class="background">
     <Header></Header>
-
-    <!-- asdasdasd -->
-
     <div class="profile-card-bg">
       <div class="row">
         <div class="col-md-6 mx-auto">
@@ -11,23 +8,14 @@
             <div class="avatar">
               <img
                 src="https://preview.redd.it/transform-your-selfie-into-a-stunning-ai-avatar-with-stable-v0-t1mdnkadob6a1.png?width=1024&format=png&auto=webp&s=07b4edf62cd53cbd30886482090cb7e7c9c16372"
-                alt="Circle Image"
-                class="img-raised rounded-circle"
-                style="width: 150px; height: auto"
-              />
+                alt="Circle Image" class="img-raised rounded-circle" style="width: 150px; height: auto" />
             </div>
             <div class="name">
               <h3 class="title">{{ username }}</h3>
               <h6>Senior Fullstack Developer</h6>
-              <a href="#pablo" class="btn btn-just-icon btn-link btn-dribbble"
-                ><i class="fa fa-dribbble"></i
-              ></a>
-              <a href="#pablo" class="btn btn-just-icon btn-link btn-twitter"
-                ><i class="fa fa-twitter"></i
-              ></a>
-              <a href="#pablo" class="btn btn-just-icon btn-link btn-pinterest"
-                ><i class="fa fa-pinterest"></i
-              ></a>
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-dribbble"><i class="fa fa-dribbble"></i></a>
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-twitter"><i class="fa fa-twitter"></i></a>
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-pinterest"><i class="fa fa-pinterest"></i></a>
             </div>
           </div>
         </div>
@@ -67,54 +55,46 @@
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1524498250077-390f9e378fc0?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=83079913579babb9d2c94a5941b2e69d&auto=format&fit=crop&w=751&q=80"
-                  class="rounded img-fluid mb-3"
-                />
+                  class="rounded img-fluid mb-3" />
               </div>
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1528249227670-9ba48616014f?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=66b8e7db17b83084f16fdeadfc93b95b&auto=format&fit=crop&w=357&q=80"
-                  class="rounded img-fluid"
-                />
+                  class="rounded img-fluid" />
               </div>
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1521341057461-6eb5f40b07ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=72da2f550f8cbd0ec252ad6fb89c96b2&auto=format&fit=crop&w=334&q=80"
-                  class="rounded img-fluid mb-3"
-                />
+                  class="rounded img-fluid mb-3" />
               </div>
             </div>
             <div class="col-md-4">
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1506667527953-22eca67dd919?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6326214b7ce18d74dde5e88db4a12dd5&auto=format&fit=crop&w=750&q=80"
-                  class="rounded img-fluid"
-                />
+                  class="rounded img-fluid" />
               </div>
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1505784045224-1247b2b29cf3?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=ec2bdc92a9687b6af5089b335691830e&auto=format&fit=crop&w=750&q=80"
-                  class="rounded img-fluid mb-3"
-                />
+                  class="rounded img-fluid mb-3" />
               </div>
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1504346466600-714572c4b726?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6754ded479383b7e3144de310fa88277&auto=format&fit=crop&w=750&q=80"
-                  class="rounded img-fluid"
-                />
+                  class="rounded img-fluid" />
               </div>
             </div>
             <div class="col-md-4">
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1524498250077-390f9e378fc0?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=83079913579babb9d2c94a5941b2e69d&auto=format&fit=crop&w=751&q=80"
-                  class="rounded img-fluid mb-3"
-                />
+                  class="rounded img-fluid mb-3" />
               </div>
               <div class="p-3">
                 <img
                   src="https://images.unsplash.com/photo-1506667527953-22eca67dd919?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6326214b7ce18d74dde5e88db4a12dd5&auto=format&fit=crop&w=750&q=80"
-                  class="rounded img-fluid"
-                />
+                  class="rounded img-fluid" />
               </div>
             </div>
           </div>
@@ -143,32 +123,32 @@ onMounted(() => {
     ? route.params.username[0]
     : route.params.username
   // Load jQuery
-  const jqueryScript = document.createElement('script')
-  jqueryScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'
-  document.head.appendChild(jqueryScript)
+  // const jqueryScript = document.createElement('script')
+  // jqueryScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'
+  // document.head.appendChild(jqueryScript)
 
-  // Load Popper.js
-  const popperScript = document.createElement('script')
-  popperScript.src = 'https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js'
-  popperScript.integrity = 'sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U'
-  popperScript.crossOrigin = 'anonymous'
-  document.head.appendChild(popperScript)
+  // // Load Popper.js
+  // const popperScript = document.createElement('script')
+  // popperScript.src = 'https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js'
+  // popperScript.integrity = 'sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U'
+  // popperScript.crossOrigin = 'anonymous'
+  // document.head.appendChild(popperScript)
 
-  // Load Bootstrap
-  const bootstrapScript = document.createElement('script')
-  bootstrapScript.src = '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'
-  document.head.appendChild(bootstrapScript)
+  // // Load Bootstrap
+  // const bootstrapScript = document.createElement('script')
+  // bootstrapScript.src = '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'
+  // document.head.appendChild(bootstrapScript)
 
-  // After Bootstrap is loaded, load Bootstrap Material Design
-  bootstrapScript.onload = () => {
-    const materialDesignScript = document.createElement('script')
-    materialDesignScript.src =
-      'https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js'
-    materialDesignScript.integrity =
-      'sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9'
-    materialDesignScript.crossOrigin = 'anonymous'
-    document.head.appendChild(materialDesignScript)
-  }
+  // // After Bootstrap is loaded, load Bootstrap Material Design
+  // bootstrapScript.onload = () => {
+  //   const materialDesignScript = document.createElement('script')
+  //   materialDesignScript.src =
+  //     'https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js'
+  //   materialDesignScript.integrity =
+  //     'sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9'
+  //   materialDesignScript.crossOrigin = 'anonymous'
+  //   document.head.appendChild(materialDesignScript)
+  // }
 })
 </script>
 
@@ -386,7 +366,7 @@ img.rounded {
   border-radius: 6px !important;
 }
 
-.tab-content > .active {
+.tab-content>.active {
   display: block;
 }
 
@@ -432,6 +412,7 @@ img.rounded {
   line-height: 41px;
   font-size: 20px;
 }
+
 .btn.btn-link {
   background-color: transparent;
   color: #999;

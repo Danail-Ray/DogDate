@@ -2,7 +2,7 @@
   <div class="header">
     <h1 class="logo" @click="landingPage">DogDate</h1>
     <nav class="naviagtion">
-      <template v-if="!locData">
+      <template v-if="!locData && user">
         <button class="logout-button" @click="shareLocation">Share Location?</button>
       </template>
       <RouterLink to="/">Home</RouterLink>
@@ -53,10 +53,12 @@ const landingPage = () => {
 }
 
 const reloadDashboardPage = () => {
-  router.push({ name: 'dashboard', params: { username: displayName } }).then(() => {
-    // Reload the page after navigation is complete
-    window.location.reload()
-  })
+  router
+    .push({ name: 'dashboard', params: { username: displayName, uid: user.value?.uid } })
+    .then(() => {
+      // Reload the page after navigation is complete
+      window.location.reload()
+    })
 }
 
 const signOutUser = () => {

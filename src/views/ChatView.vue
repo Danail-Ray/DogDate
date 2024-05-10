@@ -32,7 +32,7 @@
 import Header from '../components/GlobalHeader.vue'
 import { getAuth } from 'firebase/auth'
 import { onBeforeMount, onMounted, ref } from 'vue'
-import { getFirestore, doc, getDoc, collection, getDocs, addDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, collection, getDocs, addDoc, setDoc } from 'firebase/firestore'
 
 const auth = getAuth()
 const user = auth.currentUser
@@ -135,6 +135,21 @@ async function getChatMessages(
   }
 }
 
+async function createSubcollection(documentPath: string, chattingPartnerUID: string | undefined, username: string | null | undefined) {
+  const db = getFirestore()
+  try {
+    // Define the path to the subcollection
+
+    // Use setDoc to create a document at the specified path
+    await setDoc(doc(db, documentPath), {
+      name: username
+    })
+    console.log('Subcollection created successfully')
+  } catch (error) {
+    console.error('Error creating subcollection:', error)
+  }
+}
+
 function sendMessage(event: Event): void {
   event.preventDefault()
   const chatInput = document.querySelector('.chat-input') as HTMLInputElement
@@ -154,6 +169,10 @@ function sendMessage(event: Event): void {
     <div class="message-text">${message}</div>
   `
   chatMessages.appendChild(newMessage)
+
+
+  const documentPath = `Messages/${activeButton?.dataset.key}/ChatPartners/${currentUserUID}`
+  createSubcollection(documentPath, activeButton?.dataset.key, user?.displayName)
 
   // Send the message to the database
   const collectionref = collection(
@@ -185,6 +204,8 @@ function sendMessage(event: Event): void {
   })
 }
 
+
+
 onMounted(() => {
   getData(currentUserUID)
 })
@@ -192,16 +213,14 @@ onMounted(() => {
 
 <style scoped>
 .gradient {
-  background-image: linear-gradient(
-    23deg,
-    hsl(49deg 100% 69%) 0%,
-    hsl(16deg 80% 61%) 2%,
-    hsl(330deg 81% 34%) 12%,
-    hsl(259deg 100% 15%) 50%,
-    hsl(212deg 100% 25%) 88%,
-    hsl(197deg 100% 30%) 98%,
-    hsl(183deg 79% 36%) 100%
-  );
+  background-image: linear-gradient(23deg,
+      hsl(49deg 100% 69%) 0%,
+      hsl(16deg 80% 61%) 2%,
+      hsl(330deg 81% 34%) 12%,
+      hsl(259deg 100% 15%) 50%,
+      hsl(212deg 100% 25%) 88%,
+      hsl(197deg 100% 30%) 98%,
+      hsl(183deg 79% 36%) 100%);
   height: 100vh;
 }
 

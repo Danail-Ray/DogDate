@@ -90,7 +90,7 @@ const addUserButtons = (): void => {
       getChatMessages(currentUserUID, partnerUID)
 
       // Update the chat header
-      document.querySelector('.chat-header')!.textContent = `${buttonValue}`
+      document.querySelector('.chat-header')!.textContent = `${value}`
     })
     document.querySelector('.person-selector')?.appendChild(newButton)
   }
@@ -134,7 +134,7 @@ async function getChatMessages(
     console.error('Error getting document:', error)
   }
 }
-
+//only create it once, so do a chjeck here
 async function createSubcollection(documentPath: string, chattingPartnerUID: string | undefined, username: string | null | undefined) {
   const db = getFirestore()
   try {

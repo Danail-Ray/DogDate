@@ -31,8 +31,8 @@
 <script setup lang="ts">
 import Header from '../components/GlobalHeader.vue'
 import { getAuth } from 'firebase/auth'
-import { onBeforeMount, onMounted, ref } from 'vue'
-import { getFirestore, doc, getDoc, collection, getDocs, addDoc, setDoc } from 'firebase/firestore'
+import { onBeforeMount, onMounted } from 'vue'
+import { getFirestore, doc, collection, getDocs, addDoc, setDoc, onSnapshot  } from 'firebase/firestore'
 
 const auth = getAuth()
 const user = auth.currentUser
@@ -135,7 +135,11 @@ async function getChatMessages(
   }
 }
 //only create it once, so do a chjeck here
-async function createSubcollection(documentPath: string, chattingPartnerUID: string | undefined, username: string | null | undefined) {
+async function createSubcollection(
+  documentPath: string,
+  chattingPartnerUID: string | undefined,
+  username: string | null | undefined
+) {
   const db = getFirestore()
   try {
     // Define the path to the subcollection
@@ -170,7 +174,6 @@ function sendMessage(event: Event): void {
   `
   chatMessages.appendChild(newMessage)
 
-
   const documentPath = `Messages/${activeButton?.dataset.key}/ChatPartners/${currentUserUID}`
   createSubcollection(documentPath, activeButton?.dataset.key, user?.displayName)
 
@@ -204,23 +207,39 @@ function sendMessage(event: Event): void {
   })
 }
 
-
-
 onMounted(() => {
   getData(currentUserUID)
+
+  const q = collection(db, 'Messages', `${currentUserUID}`, 'ChatPartners')
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added' || change.type === 'removed') {
+        getData(currentUserUID)
+      }
+    })
+  })
+
+  // Unsubscribe when component is unmounted
+  onBeforeMount(() => {
+    unsubscribe()
+  })
+
 })
+
 </script>
 
 <style scoped>
 .gradient {
-  background-image: linear-gradient(23deg,
-      hsl(49deg 100% 69%) 0%,
-      hsl(16deg 80% 61%) 2%,
-      hsl(330deg 81% 34%) 12%,
-      hsl(259deg 100% 15%) 50%,
-      hsl(212deg 100% 25%) 88%,
-      hsl(197deg 100% 30%) 98%,
-      hsl(183deg 79% 36%) 100%);
+  background-image: linear-gradient(
+    23deg,
+    hsl(49deg 100% 69%) 0%,
+    hsl(16deg 80% 61%) 2%,
+    hsl(330deg 81% 34%) 12%,
+    hsl(259deg 100% 15%) 50%,
+    hsl(212deg 100% 25%) 88%,
+    hsl(197deg 100% 30%) 98%,
+    hsl(183deg 79% 36%) 100%
+  );
   height: 100vh;
 }
 

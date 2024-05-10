@@ -127,7 +127,7 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 import Header from '../components/GlobalHeader.vue'
 
-import { getAuth } from 'firebase/auth'
+import { getAuth, reload } from 'firebase/auth'
 import {
   getFirestore,
   doc,
@@ -139,13 +139,17 @@ import {
   getDoc
 } from 'firebase/firestore'
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const username = ref('')
 const route = useRoute()
+const router = useRouter();
 
 const addChattingPartner = () => {
-  addChattingPartnerToDb(username.value)
+  addChattingPartnerToDb(username.value)  
+  .then(() => {
+    router.push('/chat');
+  })
 }
 
 const addChattingPartnerToDb = async (username: string) => {

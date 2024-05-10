@@ -3,29 +3,26 @@
     <Header />
     <!-- Person selector: this contains buttons for user to select whether to chat as John or Jane -->
     <div class="content">
-      <div class="person-selector">
-        <button class="person-selector-button active-person">John</button>
-        <button class="person-selector-button">Jane</button>
-      </div>
+      <div class="person-selector"></div>
       <div class="chat-container">
-        <h2 class="chat-header">John chatting...</h2>
+        <h2 class="chat-header"></h2>
         <div class="chat-messages">
-          <div class="message blue-bg">
+          <!-- <div class="message blue-bg">
             <div class="message-sender">John</div>
             <div class="message-text">Hey Jane, what's up?</div>
             <div class="message-timestamp">10:30 AM</div>
           </div>
+
           <div class="message gray-bg">
             <div class="message-sender">Jane</div>
             <div class="message-text">Not much, just living the dream. How about you?</div>
             <div class="message-timestamp">10:35 AM</div>
-          </div>
+          </div> -->
         </div>
-        <form class="chat-input-form">
-          <input type="text" class="chat-input" required placeholder="Type here, John..." />
-          <button type="submit" class="button send-button">Send</button>
-        </form>
-        <button class="button clear-chat-button">Clear Chat</button>
+        <div class="chat-input-form">
+          <input type="text" class="chat-input" required placeholder="Type here..." />
+          <button class="button send-button" @click="sendMessage">Send</button>
+        </div>
       </div>
     </div>
   </div>
@@ -34,16 +31,17 @@
 <script setup lang="ts">
 import Header from '../components/GlobalHeader.vue'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore'
+import { onBeforeMount, onMounted, ref } from 'vue'
+import { getFirestore, doc, getDoc, collection, getDocs, addDoc } from 'firebase/firestore'
 
 const auth = getAuth()
 const user = auth.currentUser
 // Get the current user's UID
 const currentUserUID = user?.uid
-console.log(currentUserUID)
+let chatPartners = new Map<string, string>()
+const db = getFirestore()
 
 async function getData(currentUserUID: string | undefined) {
-  const db = getFirestore()
   try {
     // Get a reference to the document
     const q = collection(db, 'Messages', `${currentUserUID}`, 'ChatPartners')
@@ -51,18 +49,132 @@ async function getData(currentUserUID: string | undefined) {
 
     querySnapshot.forEach((doc) => {
       let chattingpartnerUID = doc.id
-      let chattingPartnerUsername = doc.data().name
+      let chattingPartnerUsername = doc.data().name.toString()
+      chatPartners.set(chattingPartnerUsername, chattingpartnerUID)
+    })
+  } catch (error) {
+    console.error('Error getting document:', error)
+  }
+  addUserButtons()
+}
+let activeButton: HTMLButtonElement | null = null // Keep track of the active button
 
+const addUserButtons = (): void => {
+  const iterator = chatPartners.entries()
+  const personSelector = document.querySelector('.person-selector')
+  if (!personSelector) return // Check if personSelector exists
+  personSelector.innerHTML = ''
 
+  for (const [key, value] of iterator) {
+    const newButton = document.createElement('button')
+    newButton.classList.add('person-selector-button')
+    newButton.textContent = key // Use the value as button text
+    newButton.dataset.key = value // Optionally store the key as a data attribute
+    newButton.setAttribute('data-v-a497a79e', '') // Set the data attribut
 
-      
+    newButton.addEventListener('click', (event) => {
+      if (activeButton) {
+        // Deactivate the previously active button
+        activeButton.classList.remove('active')
+      }
+      // Activate the clicked button
+      newButton.classList.add('active')
+      // Update the activeButton reference
+      activeButton = newButton
+
+      const clickedButton = event.target as HTMLButtonElement
+      let partnerUID = clickedButton.dataset.key // Retrieve the key of the clicked button
+      let buttonValue = clickedButton.textContent // Retrieve the value of the clicked button
+
+      //get the chat messages
+      getChatMessages(currentUserUID, partnerUID)
+
+      // Update the chat header
+      document.querySelector('.chat-header')!.textContent = `${buttonValue}`
+    })
+    document.querySelector('.person-selector')?.appendChild(newButton)
+  }
+}
+
+async function getChatMessages(
+  currentUserUID: string | undefined,
+  chattingPartnerUID: string | undefined
+) {
+  try {
+    const q = collection(
+      db,
+      'Messages',
+      `${currentUserUID}`,
+      'ChatPartners',
+      `${chattingPartnerUID}`,
+      'Messages'
+    )
+    const querySnapshot = await getDocs(q)
+    querySnapshot.forEach((doc) => {
+      const message = doc.data()
+    })
+
+    const chatMessages = document.querySelector('.chat-messages')
+    if (!chatMessages) return
+
+    chatMessages.innerHTML = '' // Clear the chat messages
+    querySnapshot.forEach((doc) => {
+      const message = doc.data()
+      const newMessage = document.createElement('div')
+      newMessage.classList.add('message')
+      newMessage.classList.add(message.senderUID === currentUserUID ? 'blue-bg' : 'gray-bg')
+      newMessage.setAttribute('data-v-a497a79e', '') // Set the data attribute
+      newMessage.innerHTML = `
+        <div class="message-sender">${message.sender}</div>
+        <div class="message-text">${message.message}</div>
+      `
+      chatMessages.appendChild(newMessage)
     })
   } catch (error) {
     console.error('Error getting document:', error)
   }
 }
 
-getData(currentUserUID)
+function sendMessage(event: Event): void {
+  event.preventDefault()
+  const chatInput = document.querySelector('.chat-input') as HTMLInputElement
+  const message = chatInput.value
+  chatInput.value = ''
+  if (!message) return
+
+  const chatMessages = document.querySelector('.chat-messages')
+  if (!chatMessages) return
+
+  const newMessage = document.createElement('div')
+  newMessage.classList.add('message')
+  newMessage.classList.add('blue-bg')
+  newMessage.setAttribute('data-v-a497a79e', '') // Set the data attribute
+  newMessage.innerHTML = `
+    <div class="message-sender">${auth.currentUser?.displayName}</div>
+    <div class="message-text">${message}</div>
+  `
+  chatMessages.appendChild(newMessage)
+
+  // Send the message to the database
+  const collectionref = collection(
+    db,
+    'Messages',
+    `${currentUserUID}`,
+    'ChatPartners',
+    `${activeButton?.dataset.key}`,
+    'Messages'
+  )
+  addDoc(collectionref, {
+    message: message,
+    senderUID: currentUserUID,
+    sender: auth.currentUser?.displayName,
+  })
+
+}
+
+onMounted(() => {
+  getData(currentUserUID)
+})
 </script>
 
 <style scoped>
@@ -82,6 +194,14 @@ getData(currentUserUID)
 
 .content {
   display: flex;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
 }
 
 .button {
@@ -105,7 +225,7 @@ getData(currentUserUID)
   border-radius: 0.5em;
   padding: 0.5em 1.25em;
   margin: auto;
-  max-width: 37.5em;
+  max-width: 25em;
   height: 37.5em;
   box-shadow: 0 0 1.25em 0.5em #c3c3c333;
 }
@@ -117,7 +237,7 @@ getData(currentUserUID)
   font-size: 2em;
 }
 
-.active-person {
+.active {
   background: #08529d;
   box-shadow: 0 0 0.5em 0.1em #c3c3c333;
 }
@@ -129,8 +249,10 @@ getData(currentUserUID)
   padding: 0.5em 1.25em;
   margin: auto;
   max-width: 37.5em;
+  min-width: 45em;
   height: 37.5em;
   box-shadow: 0 0 1.25em 0.5em #c3c3c333;
+  margin-left: -10em;
 }
 
 .chat-header {

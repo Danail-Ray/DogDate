@@ -208,7 +208,7 @@ async function createSubcollection(documentPath: string, chattingPartnerUID: str
   const db = getFirestore()
   try {
     // Define the path to the subcollection
-    const subcollectionPath = `${documentPath}/ChatPartners/`
+    const subcollectionPath = `${documentPath}/ChatPartners`
 
     // Use setDoc to create a document at the specified path
     await setDoc(doc(db, subcollectionPath, chattingPartnerUID), {

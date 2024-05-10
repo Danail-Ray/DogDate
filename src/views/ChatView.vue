@@ -167,9 +167,22 @@ function sendMessage(event: Event): void {
   addDoc(collectionref, {
     message: message,
     senderUID: currentUserUID,
-    sender: auth.currentUser?.displayName,
+    sender: auth.currentUser?.displayName
   })
 
+  const collectionrefChatPartner = collection(
+    db,
+    'Messages',
+    `${activeButton?.dataset.key}`,
+    'ChatPartners',
+    `${currentUserUID}`,
+    'Messages'
+  )
+  addDoc(collectionrefChatPartner, {
+    message: message,
+    senderUID: currentUserUID,
+    sender: auth.currentUser?.displayName
+  })
 }
 
 onMounted(() => {

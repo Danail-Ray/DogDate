@@ -233,29 +233,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-body {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  min-height: 100vh;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Header {
-  padding: 200px;
-} */
 .background {
-  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
   background: url(../assets/home-bg.jpg) no-repeat;
   background-size: cover;
   background-position: center;
-}
-
-html * {
-  -webkit-font-smoothing: antialiased;
 }
 
 .profile-card-bg {

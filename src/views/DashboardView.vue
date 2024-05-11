@@ -51,13 +51,26 @@
         <div class="col-md-6 ml-auto mr-auto">
           <div class="profile-tabs">
             <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
-              <li class="nav-item">
+              <li class="nav-item" v-if="username !== currentUser">
                 <a class="nav-link" href="#favorite" role="tab" data-toggle="tab">
                   <i class="material-icons">favorite</i>
                   Favorite
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" v-else>
+                <a
+                  class="nav-link"
+                  href="#studio"
+                  role="tab"
+                  data-toggle="tab"
+                  @click="openEditModal"
+                >
+                  <i class="material-icons">settings</i>
+                  Edit Profile
+                </a>
+              </li>
+
+              <li class="nav-item" v-if="username !== currentUser">
                 <a class="nav-link" href="#works" role="tab" data-toggle="tab">
                   <i class="material-icons" @click="addChattingPartner">forum</i>
                   Chat
@@ -136,13 +149,34 @@
 <script setup lang="ts">
 import { db } from '@/main'
 import Header from '../components/GlobalHeader.vue'
-import { getAuth } from 'firebase/auth'
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
-import { onMounted, ref as refVue } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import ProfileEditModal from './ProfileEditModal.vue'
 
-const username = refVue('')
+import { getAuth } from 'firebase/auth'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  where
+} from 'firebase/firestore'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+interface User {
+  jobTitle: string
+  description: string
+}
+
+interface EditedUser {
+  jobTitle: string
+  description: string
+}
+
+const currentUser = getAuth().currentUser?.displayName
+const username = ref('')
 const route = useRoute()
 const router = useRouter()
 const currentUserUID = getAuth().currentUser?.uid
@@ -176,6 +210,23 @@ const getImage = async (UID: String) => {
   } catch (error) {
     console.error('Error getting document:', error)
   }
+}
+
+const editedUser = ref<EditedUser>({
+  jobTitle: '',
+  description: ''
+})
+
+const showEditModal = ref(false)
+
+const openEditModal = () => {
+  showEditModal.value = true
+  // Initialize editedUser with currentUser data
+  editedUser.value = { ...currentUser.value }
+}
+
+const closeEditModal = () => {
+  showEditModal.value = false
 }
 
 const addChattingPartner = () => {

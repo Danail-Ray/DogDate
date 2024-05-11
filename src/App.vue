@@ -31,8 +31,8 @@ import { RouterView } from 'vue-router'
   color: #ffffff;
 }
 
-.main-container {
-  position: relative; /* Ensure the main container is positioned relative */
+html {
+  background: #0b1d26;
 }
 
 ::selection {

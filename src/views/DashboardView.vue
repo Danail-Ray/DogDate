@@ -150,7 +150,25 @@ const profileImg = refVue('')
 
 const getProfilePicture = async () => {
   try {
-    const docRef = doc(db, 'images', `${currentUserUID}`)
+    const q = query(collection(db, 'profiles'), where('name', '==', username.value))
+    // Fetch the profiles collection
+    const querySnapshot = await getDocs(q)
+
+    querySnapshot.forEach((doc) => {
+      // Access document data
+      let profileUID = doc.data().uid
+      console.log(profileUID)
+      getImage(profileUID)
+    })
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
+
+const getImage = async (UID: String) => {
+  console.log(UID)
+  try {
+    const docRef = doc(db, 'images', `${UID}`)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
       profileImg.value = docSnap.data().profilePicture

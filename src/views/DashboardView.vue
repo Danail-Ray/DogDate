@@ -123,32 +123,29 @@
 </template>
 
 <script setup lang="ts">
-import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.css'
 import Header from '../components/GlobalHeader.vue'
 
 import { getAuth, reload } from 'firebase/auth'
 import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDocs,
   collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
   query,
-  where,
-  getDoc
+  setDoc,
+  where
 } from 'firebase/firestore'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const username = ref('')
 const route = useRoute()
-const router = useRouter();
+const router = useRouter()
 
 const addChattingPartner = () => {
-  addChattingPartnerToDb(username.value)  
-  .then(() => {
-    router.push('/chat');
+  addChattingPartnerToDb(username.value).then(() => {
+    router.push('/chat')
   })
 }
 
@@ -197,7 +194,7 @@ async function fetchData(username: string, currentUserUID: string) {
       // Access document data
       chattingPartnerUID = doc.data().uid
       chattingPartnerUsername = doc.data().name
-      
+
       // const documentPath = `Messages/${currentUserUID}`
       // const subcollectionPath = `${documentPath}/ChatPartners/${chattingPartnerUID}`
     })
@@ -208,7 +205,11 @@ async function fetchData(username: string, currentUserUID: string) {
   }
 }
 
-async function createSubcollection(documentPath: string, chattingPartnerUID: string, username : string) {
+async function createSubcollection(
+  documentPath: string,
+  chattingPartnerUID: string,
+  username: string
+) {
   const db = getFirestore()
   try {
     // Define the path to the subcollection

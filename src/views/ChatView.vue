@@ -1,5 +1,5 @@
 <template>
-  <div class="gradient">
+  <div class="background">
     <Header />
     <!-- Person selector: this contains buttons for user to select whether to chat as John or Jane -->
     <div class="content">
@@ -29,10 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import Header from '../components/GlobalHeader.vue'
 import { getAuth } from 'firebase/auth'
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+  setDoc
+} from 'firebase/firestore'
 import { onBeforeMount, onMounted } from 'vue'
-import { getFirestore, doc, collection, getDocs, addDoc, setDoc, onSnapshot  } from 'firebase/firestore'
+import Header from '../components/GlobalHeader.vue'
 
 const auth = getAuth()
 const user = auth.currentUser
@@ -223,24 +231,15 @@ onMounted(() => {
   onBeforeMount(() => {
     unsubscribe()
   })
-
 })
-
 </script>
 
 <style scoped>
-.gradient {
-  background-image: linear-gradient(
-    23deg,
-    hsl(49deg 100% 69%) 0%,
-    hsl(16deg 80% 61%) 2%,
-    hsl(330deg 81% 34%) 12%,
-    hsl(259deg 100% 15%) 50%,
-    hsl(212deg 100% 25%) 88%,
-    hsl(197deg 100% 30%) 98%,
-    hsl(183deg 79% 36%) 100%
-  );
-  height: 100vh;
+.background {
+  min-height: 100vh;
+  background: url(../assets/home-bg.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .content {

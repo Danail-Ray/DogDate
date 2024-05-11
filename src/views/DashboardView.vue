@@ -7,11 +7,22 @@
           <div class="profile text-center">
             <div class="avatar">
               <img
+                v-if="profileImg"
+                :src="profileImg"
+                alt="Profile Image"
+                class="img-raised rounded-circle"
+                style="width: 150px; height: auto"
+                @click="uploadProfilePicture"
+              />
+              <img
+                v-else
                 src="https://preview.redd.it/transform-your-selfie-into-a-stunning-ai-avatar-with-stable-v0-t1mdnkadob6a1.png?width=1024&format=png&auto=webp&s=07b4edf62cd53cbd30886482090cb7e7c9c16372"
                 alt="Circle Image"
                 class="img-raised rounded-circle"
                 style="width: 150px; height: auto"
+                @click="uploadProfilePicture"
               />
+              <input type="file" accept="image/*" style="display: none" />
             </div>
             <div class="name">
               <h3 class="title">{{ username }}</h3>
@@ -123,25 +134,31 @@
 </template>
 
 <script setup lang="ts">
+import { db } from '@/main'
 import Header from '../components/GlobalHeader.vue'
-
-import { getAuth, reload } from 'firebase/auth'
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  query,
-  setDoc,
-  where
-} from 'firebase/firestore'
-import { onMounted, ref } from 'vue'
+import { getAuth } from 'firebase/auth'
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { onMounted, ref as refVue } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
-const username = ref('')
+const username = refVue('')
 const route = useRoute()
 const router = useRouter()
+const currentUserUID = getAuth().currentUser?.uid
+const profileImg = refVue('')
+
+const getProfilePicture = async () => {
+  try {
+    const docRef = doc(db, 'images', `${currentUserUID}`)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      profileImg.value = docSnap.data().profilePicture
+    }
+  } catch (error) {
+    console.error('Error getting document:', error)
+  }
+}
 
 const addChattingPartner = () => {
   addChattingPartnerToDb(username.value).then(() => {
@@ -158,7 +175,6 @@ const addChattingPartnerToDb = async (username: string) => {
 }
 
 async function checkAndCreateDocument(currentUserUID: string) {
-  const db = getFirestore()
   try {
     // Get a reference to the document
     const docRef = doc(db, 'Messages', `${currentUserUID}`)
@@ -180,7 +196,6 @@ async function checkAndCreateDocument(currentUserUID: string) {
 }
 
 async function fetchData(username: string, currentUserUID: string) {
-  const db = getFirestore()
   try {
     //query the database to get the chatting partner's UID
     const q = query(collection(db, 'profiles'), where('name', '==', username))
@@ -210,7 +225,6 @@ async function createSubcollection(
   chattingPartnerUID: string,
   username: string
 ) {
-  const db = getFirestore()
   try {
     // Define the path to the subcollection
     const subcollectionPath = `${documentPath}/ChatPartners`
@@ -225,10 +239,51 @@ async function createSubcollection(
   }
 }
 
+async function uploadProfilePicture() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = 'image/*' // accept only image files
+  input.onchange = function (event) {
+    const files = (event.target as HTMLInputElement).files
+    if (files && files.length > 0) {
+      const image = files[0]
+      const storage = getStorage()
+      const imageRef = ref(storage, image.name)
+      uploadBytes(imageRef, image).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((downloadUrl) => {
+          setDoc(doc(db, 'images', `${currentUserUID}`), {
+            username: username.value,
+            profilePicture: downloadUrl,
+            createdAt: new Date()
+          })
+        })
+      })
+    }
+  }
+  input.click()
+
+  // try {
+  //   //query the database to get the chatting partner's UID
+  //   const q = query(collection(db, 'profiles'), where('name', '==', username.value))
+  //   // Fetch the profiles collection
+  //   const querySnapshot = await getDocs(q)
+  //   // Iterate over the documents in the collection
+  //   querySnapshot.forEach((doc) => {
+  //     // Access document data
+  //     let viewedUserUid = doc.data().uid
+  //     const formData = new FormData()
+  //   })
+  // } catch (error) {
+  //   console.error('Error fetching data:', error)
+  // }
+}
+
 onMounted(() => {
   username.value = Array.isArray(route.params.username)
     ? route.params.username[0]
     : route.params.username
+
+  getProfilePicture()
 })
 </script>
 
@@ -340,6 +395,7 @@ a .material-icons {
 
 .img-raised {
   box-shadow: 10px 10px 10px rgba(33, 33, 33, 0.7);
+  cursor: pointer;
 }
 
 .rounded-circle {

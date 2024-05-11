@@ -217,7 +217,6 @@ function sendMessage(event: Event): void {
 
 onMounted(() => {
   getData(currentUserUID)
-
   const q = collection(db, 'Messages', `${currentUserUID}`, 'ChatPartners')
   const unsubscribe = onSnapshot(q, (snapshot) => {
     snapshot.docChanges().forEach((change) => {

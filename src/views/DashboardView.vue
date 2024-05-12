@@ -5,12 +5,12 @@
       <div class="row">
         <div class="col-md-6 mx-auto">
           <div class="profile text-center">
-            <div class="avatar">
+            <div class="avatar" v-if="viewedUserUID === currentUserUID">
               <img
                 v-if="profileImg"
                 :src="profileImg"
                 alt="Profile Image"
-                class="img-raised rounded-circle"
+                class="img-raised rounded-circle show-pointer"
                 style="width: 150px; height: auto"
                 @click="uploadProfilePicture"
               />
@@ -18,11 +18,32 @@
                 v-else
                 src="https://preview.redd.it/transform-your-selfie-into-a-stunning-ai-avatar-with-stable-v0-t1mdnkadob6a1.png?width=1024&format=png&auto=webp&s=07b4edf62cd53cbd30886482090cb7e7c9c16372"
                 alt="Circle Image"
-                class="img-raised rounded-circle"
+                class="img-raised rounded-circle show-pointer"
                 style="width: 150px; height: auto"
                 @click="uploadProfilePicture"
               />
-              <input type="file" accept="image/*" style="display: none" />
+              <input
+                v-if="viewedUserUID === currentUserUID"
+                type="file"
+                accept="image/*"
+                style="display: none"
+              />
+            </div>
+            <div class="avatar" v-else>
+              <img
+                v-if="profileImg"
+                :src="profileImg"
+                alt="Profile Image"
+                class="img-raised rounded-circle"
+                style="width: 150px; height: auto"
+              />
+              <img
+                v-else
+                src="https://preview.redd.it/transform-your-selfie-into-a-stunning-ai-avatar-with-stable-v0-t1mdnkadob6a1.png?width=1024&format=png&auto=webp&s=07b4edf62cd53cbd30886482090cb7e7c9c16372"
+                alt="Circle Image"
+                class="img-raised rounded-circle"
+                style="width: 150px; height: auto"
+              />
             </div>
             <div class="name">
               <h3 class="title">{{ username }}</h3>
@@ -165,6 +186,7 @@ const route = useRoute()
 const router = useRouter()
 const currentUserUID = getAuth().currentUser?.uid
 const profileImg = ref('')
+const viewedUserUID = ref('')
 
 const getProfilePicture = async () => {
   try {
@@ -175,7 +197,8 @@ const getProfilePicture = async () => {
     querySnapshot.forEach((doc) => {
       // Access document data
       let profileUID = doc.data().uid
-      console.log(profileUID)
+      viewedUserUID.value = profileUID
+      console.log(profileUID + ' ' + currentUserUID)
       getImage(profileUID)
     })
   } catch (error) {
@@ -397,9 +420,12 @@ a .material-icons {
   transform: translate3d(0, -50%, 0);
 }
 
+.show-pointer {
+  cursor: pointer;
+}
+
 .img-raised {
   box-shadow: 10px 10px 10px rgba(33, 33, 33, 0.7);
-  cursor: pointer;
 }
 
 .rounded-circle {

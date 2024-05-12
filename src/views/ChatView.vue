@@ -39,9 +39,11 @@ import {
   onSnapshot,
   setDoc,
   orderBy,
-  query
+  query,
+  deleteDoc,
+  where
 } from 'firebase/firestore'
-import { onBeforeMount, onMounted } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import Header from '../components/GlobalHeader.vue'
 
 const auth = getAuth()
@@ -50,6 +52,7 @@ const user = auth.currentUser
 const currentUserUID = user?.uid
 let chatPartners = new Map<string, string>()
 const db = getFirestore()
+const currentChatPartnerUIDS = ref(new Set<string>())
 
 async function getData(currentUserUID: string | undefined) {
   try {
@@ -61,6 +64,7 @@ async function getData(currentUserUID: string | undefined) {
       let chattingpartnerUID = doc.id
       let chattingPartnerUsername = doc.data().name.toString()
       chatPartners.set(chattingPartnerUsername, chattingpartnerUID)
+      currentChatPartnerUIDS.value.add(chattingpartnerUID)
     })
   } catch (error) {
     console.error('Error getting document:', error)
@@ -78,6 +82,7 @@ const addUserButtons = (): void => {
   for (const [key, value] of iterator) {
     const newButton = document.createElement('button')
     newButton.classList.add('person-selector-button')
+    newButton.classList.add('unread-messages')
     newButton.textContent = key // Use the value as button text
     newButton.dataset.key = value // Optionally store the key as a data attribute
     newButton.setAttribute('data-v-a497a79e', '') // Set the data attribut
@@ -98,7 +103,6 @@ const addUserButtons = (): void => {
 
       //get the chat messages
       getChatMessages(currentUserUID, partnerUID)
-
       // Update the chat header
       document.querySelector('.chat-header')!.textContent = `${value}`
     })
@@ -144,6 +148,21 @@ async function getChatMessages(
         <div class="message-date">${message.formattedDate}</div>
       `
       chatMessages.appendChild(newMessage)
+      chatMessages.scrollTop = chatMessages.scrollHeight
+    })
+
+    //fix this shit
+    const unreadMessages = query(
+      collection(db, 'Messages', `${currentUserUID}`, 'unReadMessages'), 
+    )
+    getDocs(unreadMessages).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const message = doc.data()
+        console.log('message ' + message)
+        if (chattingPartnerUID === message.senderUID) {
+          deleteDoc(doc.ref)
+        }
+      })
     })
   } catch (error) {
     console.error('Error getting document:', error)
@@ -194,6 +213,7 @@ function sendMessage(event: Event): void {
     <div class="message-date">${formattedTime}</div>
   `
   chatMessages.appendChild(newMessage)
+  chatMessages.scrollTop = chatMessages.scrollHeight
 
   const documentPath = `Messages/${activeButton?.dataset.key}/ChatPartners/${currentUserUID}`
   createSubcollection(documentPath, activeButton?.dataset.key, user?.displayName)
@@ -215,6 +235,7 @@ function sendMessage(event: Event): void {
     formattedDate: formattedTime
   })
 
+  //add message to counter part
   const collectionrefChatPartner = collection(
     db,
     'Messages',
@@ -230,12 +251,52 @@ function sendMessage(event: Event): void {
     date: currentDate,
     formattedDate: formattedTime
   })
+
+  //add the message to unread messages
+  const unReadChatPartner = collection(
+    db,
+    'Messages',
+    `${activeButton?.dataset.key}`,
+    'unReadMessages'
+  )
+  addDoc(unReadChatPartner, {
+    message: message,
+    senderUID: currentUserUID,
+    sender: auth.currentUser?.displayName,
+    date: currentDate,
+    formattedDate: formattedTime,
+    reciever: activeButton?.dataset.key
+  })
+}
+
+const markUserWithUnreadMessages = () => {
+  const personSelector = document.querySelector('.person-selector')
+  if (!personSelector) return
+  const buttons = personSelector.querySelectorAll('button')
+  buttons.forEach((button) => {
+    const partnerUID = button.dataset.key
+    console.log('partnerUID ' + partnerUID)
+    const unreadMessages = collection(db, 'Messages', `${currentUserUID}`, 'unReadMessages')
+    const q = query(unreadMessages, orderBy('date', 'asc'))
+    getDocs(q).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const message = doc.data()
+
+        if (activeButton?.dataset.key === message.senderUID) {
+          getChatMessages(currentUserUID, activeButton?.dataset.key)
+          deleteDoc(doc.ref)
+        }
+
+        //Add marker to the button
+      })
+    })
+  })
 }
 
 onMounted(() => {
   getData(currentUserUID)
   const q = collection(db, 'Messages', `${currentUserUID}`, 'ChatPartners')
-  const unsubscribe = onSnapshot(q, (snapshot) => {
+  const unsubscribeChatPartners = onSnapshot(q, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === 'added' || change.type === 'removed') {
         getData(currentUserUID)
@@ -243,9 +304,19 @@ onMounted(() => {
     })
   })
 
+  const unreadMessages = collection(db, 'Messages', `${currentUserUID}`, 'unReadMessages')
+  const unsubscribeUnreadMessages = onSnapshot(unreadMessages, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added' || change.type === 'removed') {
+        markUserWithUnreadMessages()
+      }
+    })
+  })
+
   // Unsubscribe when component is unmounted
   onBeforeMount(() => {
-    unsubscribe()
+    unsubscribeChatPartners()
+    unsubscribeUnreadMessages()
   })
 })
 </script>

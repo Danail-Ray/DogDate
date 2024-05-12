@@ -37,7 +37,9 @@ import {
   getDocs,
   getFirestore,
   onSnapshot,
-  setDoc
+  setDoc,
+  orderBy,
+  query
 } from 'firebase/firestore'
 import { onBeforeMount, onMounted } from 'vue'
 import Header from '../components/GlobalHeader.vue'
@@ -92,7 +94,7 @@ const addUserButtons = (): void => {
 
       const clickedButton = event.target as HTMLButtonElement
       let partnerUID = clickedButton.dataset.key // Retrieve the key of the clicked button
-      let buttonValue = clickedButton.textContent // Retrieve the value of the clicked button
+      // let buttonValue = clickedButton.textContent // Retrieve the value of the clicked button
 
       //get the chat messages
       getChatMessages(currentUserUID, partnerUID)
@@ -109,18 +111,22 @@ async function getChatMessages(
   chattingPartnerUID: string | undefined
 ) {
   try {
-    const q = collection(
-      db,
-      'Messages',
-      `${currentUserUID}`,
-      'ChatPartners',
-      `${chattingPartnerUID}`,
-      'Messages'
+    const q = query(
+      collection(
+        db,
+        'Messages',
+        `${currentUserUID}`,
+        'ChatPartners',
+        `${chattingPartnerUID}`,
+        'Messages'
+      ),
+      orderBy('date', 'asc')
     )
+
     const querySnapshot = await getDocs(q)
-    querySnapshot.forEach((doc) => {
-      const message = doc.data()
-    })
+    // querySnapshot.forEach((doc) => {
+    //   const message = doc.data()
+    // })
 
     const chatMessages = document.querySelector('.chat-messages')
     if (!chatMessages) return
@@ -135,6 +141,7 @@ async function getChatMessages(
       newMessage.innerHTML = `
         <div class="message-sender">${message.sender}</div>
         <div class="message-text">${message.message}</div>
+        <div class="message-date">${message.formattedDate}</div>
       `
       chatMessages.appendChild(newMessage)
     })
@@ -167,6 +174,11 @@ function sendMessage(event: Event): void {
   const chatInput = document.querySelector('.chat-input') as HTMLInputElement
   const message = chatInput.value
   chatInput.value = ''
+  const currentDate = new Date()
+  const hours = currentDate.getHours()
+  const minutes = currentDate.getMinutes()
+  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+
   if (!message) return
 
   const chatMessages = document.querySelector('.chat-messages')
@@ -179,6 +191,7 @@ function sendMessage(event: Event): void {
   newMessage.innerHTML = `
     <div class="message-sender">${auth.currentUser?.displayName}</div>
     <div class="message-text">${message}</div>
+    <div class="message-date">${formattedTime}</div>
   `
   chatMessages.appendChild(newMessage)
 
@@ -197,7 +210,9 @@ function sendMessage(event: Event): void {
   addDoc(collectionref, {
     message: message,
     senderUID: currentUserUID,
-    sender: auth.currentUser?.displayName
+    sender: auth.currentUser?.displayName,
+    date: currentDate,
+    formattedDate: formattedTime
   })
 
   const collectionrefChatPartner = collection(
@@ -211,7 +226,9 @@ function sendMessage(event: Event): void {
   addDoc(collectionrefChatPartner, {
     message: message,
     senderUID: currentUserUID,
-    sender: auth.currentUser?.displayName
+    sender: auth.currentUser?.displayName,
+    date: currentDate,
+    formattedDate: formattedTime
   })
 }
 

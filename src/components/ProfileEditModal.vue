@@ -1,4 +1,3 @@
-<!-- ProfileEditModal.vue -->
 <template>
   <div class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

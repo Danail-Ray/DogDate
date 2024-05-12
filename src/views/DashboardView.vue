@@ -7,22 +7,11 @@
           <div class="profile text-center">
             <div class="avatar">
               <img
-                v-if="profileImg"
-                :src="profileImg"
-                alt="Profile Image"
-                class="img-raised rounded-circle"
-                style="width: 150px; height: auto"
-                @click="uploadProfilePicture"
-              />
-              <img
-                v-else
                 src="https://preview.redd.it/transform-your-selfie-into-a-stunning-ai-avatar-with-stable-v0-t1mdnkadob6a1.png?width=1024&format=png&auto=webp&s=07b4edf62cd53cbd30886482090cb7e7c9c16372"
                 alt="Circle Image"
                 class="img-raised rounded-circle"
                 style="width: 150px; height: auto"
-                @click="uploadProfilePicture"
               />
-              <input type="file" accept="image/*" style="display: none" />
             </div>
             <div class="name">
               <h3 class="title">{{ username }}</h3>
@@ -79,6 +68,15 @@
             </ul>
           </div>
         </div>
+
+        <!-- Profile Edit Modal -->
+        <ProfileEditModal
+          v-if="isEditModalOpen"
+          :user="user"
+          :editedUser="editedUser"
+          @save="saveEditedUser"
+          @close="closeEditModal"
+        />
       </div>
 
       <div class="tab-content tab-space">
@@ -147,9 +145,9 @@
 </template>
 
 <script setup lang="ts">
-import { db } from '@/main'
+import { log } from 'console'
 import Header from '../components/GlobalHeader.vue'
-import ProfileEditModal from './ProfileEditModal.vue'
+import ProfileEditModal from '../components/ProfileEditModal.vue'
 
 import { getAuth } from 'firebase/auth'
 import {
@@ -165,6 +163,9 @@ import {
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+// Reactive variable to track whether the edit modal is open
+const isEditModalOpen = ref(false)
+
 interface User {
   jobTitle: string
   description: string
@@ -174,60 +175,54 @@ interface EditedUser {
   jobTitle: string
   description: string
 }
+// User data
+const user: User = {
+  jobTitle: 'Senior Fullstack Developer',
+  description: 'An artist of considerable range, Chet Faker...'
+}
 
+// Edited user data
+const editedUser: EditedUser = {
+  jobTitle: '',
+  description: ''
+}
+
+// Method to open the edit modal
+const openEditModal = () => {
+  // Populate the edited user data with the current user data
+  editedUser.jobTitle = user.jobTitle
+  editedUser.description = user.description
+
+  // Open the edit modal
+  isEditModalOpen.value = !isEditModalOpen.value
+  console.log(isEditModalOpen.value)
+}
+
+// Method to close the edit modal
+const closeEditModal = () => {
+  // Close the edit modal
+  isEditModalOpen.value = false
+}
+
+// Method to save the edited user data
+const saveEditedUser = () => {
+  // Update the user data with the edited data
+  user.jobTitle = editedUser.jobTitle
+  user.description = editedUser.description
+
+  // Close the edit modal
+  isEditModalOpen.value = false
+}
+
+// Method to update the user data in the database
+const updateUserInDatabase = async () => {
+  // Update the user data in the database
+  // Add your Firestore update logic here
+}
 const currentUser = getAuth().currentUser?.displayName
 const username = ref('')
 const route = useRoute()
 const router = useRouter()
-const currentUserUID = getAuth().currentUser?.uid
-const profileImg = refVue('')
-
-const getProfilePicture = async () => {
-  try {
-    const q = query(collection(db, 'profiles'), where('name', '==', username.value))
-    // Fetch the profiles collection
-    const querySnapshot = await getDocs(q)
-
-    querySnapshot.forEach((doc) => {
-      // Access document data
-      let profileUID = doc.data().uid
-      console.log(profileUID)
-      getImage(profileUID)
-    })
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  }
-}
-
-const getImage = async (UID: String) => {
-  console.log(UID)
-  try {
-    const docRef = doc(db, 'images', `${UID}`)
-    const docSnap = await getDoc(docRef)
-    if (docSnap.exists()) {
-      profileImg.value = docSnap.data().profilePicture
-    }
-  } catch (error) {
-    console.error('Error getting document:', error)
-  }
-}
-
-const editedUser = ref<EditedUser>({
-  jobTitle: '',
-  description: ''
-})
-
-const showEditModal = ref(false)
-
-const openEditModal = () => {
-  showEditModal.value = true
-  // Initialize editedUser with currentUser data
-  editedUser.value = { ...currentUser.value }
-}
-
-const closeEditModal = () => {
-  showEditModal.value = false
-}
 
 const addChattingPartner = () => {
   addChattingPartnerToDb(username.value).then(() => {
@@ -244,6 +239,7 @@ const addChattingPartnerToDb = async (username: string) => {
 }
 
 async function checkAndCreateDocument(currentUserUID: string) {
+  const db = getFirestore()
   try {
     // Get a reference to the document
     const docRef = doc(db, 'Messages', `${currentUserUID}`)
@@ -265,6 +261,7 @@ async function checkAndCreateDocument(currentUserUID: string) {
 }
 
 async function fetchData(username: string, currentUserUID: string) {
+  const db = getFirestore()
   try {
     //query the database to get the chatting partner's UID
     const q = query(collection(db, 'profiles'), where('name', '==', username))
@@ -294,6 +291,7 @@ async function createSubcollection(
   chattingPartnerUID: string,
   username: string
 ) {
+  const db = getFirestore()
   try {
     // Define the path to the subcollection
     const subcollectionPath = `${documentPath}/ChatPartners`
@@ -308,51 +306,10 @@ async function createSubcollection(
   }
 }
 
-async function uploadProfilePicture() {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = 'image/*' // accept only image files
-  input.onchange = function (event) {
-    const files = (event.target as HTMLInputElement).files
-    if (files && files.length > 0) {
-      const image = files[0]
-      const storage = getStorage()
-      const imageRef = ref(storage, image.name)
-      uploadBytes(imageRef, image).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((downloadUrl) => {
-          setDoc(doc(db, 'images', `${currentUserUID}`), {
-            username: username.value,
-            profilePicture: downloadUrl,
-            createdAt: new Date()
-          })
-        })
-      })
-    }
-  }
-  input.click()
-
-  // try {
-  //   //query the database to get the chatting partner's UID
-  //   const q = query(collection(db, 'profiles'), where('name', '==', username.value))
-  //   // Fetch the profiles collection
-  //   const querySnapshot = await getDocs(q)
-  //   // Iterate over the documents in the collection
-  //   querySnapshot.forEach((doc) => {
-  //     // Access document data
-  //     let viewedUserUid = doc.data().uid
-  //     const formData = new FormData()
-  //   })
-  // } catch (error) {
-  //   console.error('Error fetching data:', error)
-  // }
-}
-
 onMounted(() => {
   username.value = Array.isArray(route.params.username)
     ? route.params.username[0]
     : route.params.username
-
-  getProfilePicture()
 })
 </script>
 
@@ -447,7 +404,6 @@ a .material-icons {
 
 .img-raised {
   box-shadow: 10px 10px 10px rgba(33, 33, 33, 0.7);
-  cursor: pointer;
 }
 
 .rounded-circle {

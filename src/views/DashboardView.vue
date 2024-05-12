@@ -68,15 +68,6 @@
             </ul>
           </div>
         </div>
-
-        <!-- Profile Edit Modal -->
-        <ProfileEditModal
-          v-if="isEditModalOpen"
-          :user="user"
-          :editedUser="editedUser"
-          @save="saveEditedUser"
-          @close="closeEditModal"
-        />
       </div>
 
       <div class="tab-content tab-space">
@@ -145,9 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { log } from 'console'
 import Header from '../components/GlobalHeader.vue'
-import ProfileEditModal from '../components/ProfileEditModal.vue'
 
 import { getAuth } from 'firebase/auth'
 import {
@@ -163,62 +152,6 @@ import {
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-// Reactive variable to track whether the edit modal is open
-const isEditModalOpen = ref(false)
-
-interface User {
-  jobTitle: string
-  description: string
-}
-
-interface EditedUser {
-  jobTitle: string
-  description: string
-}
-// User data
-const user: User = {
-  jobTitle: 'Senior Fullstack Developer',
-  description: 'An artist of considerable range, Chet Faker...'
-}
-
-// Edited user data
-const editedUser: EditedUser = {
-  jobTitle: '',
-  description: ''
-}
-
-// Method to open the edit modal
-const openEditModal = () => {
-  // Populate the edited user data with the current user data
-  editedUser.jobTitle = user.jobTitle
-  editedUser.description = user.description
-
-  // Open the edit modal
-  isEditModalOpen.value = !isEditModalOpen.value
-  console.log(isEditModalOpen.value)
-}
-
-// Method to close the edit modal
-const closeEditModal = () => {
-  // Close the edit modal
-  isEditModalOpen.value = false
-}
-
-// Method to save the edited user data
-const saveEditedUser = () => {
-  // Update the user data with the edited data
-  user.jobTitle = editedUser.jobTitle
-  user.description = editedUser.description
-
-  // Close the edit modal
-  isEditModalOpen.value = false
-}
-
-// Method to update the user data in the database
-const updateUserInDatabase = async () => {
-  // Update the user data in the database
-  // Add your Firestore update logic here
-}
 const currentUser = getAuth().currentUser?.displayName
 const username = ref('')
 const route = useRoute()

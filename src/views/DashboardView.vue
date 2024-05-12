@@ -171,14 +171,13 @@ import {
   doc,
   getDoc,
   getDocs,
-  getFirestore,
   query,
   setDoc,
   where
 } from 'firebase/firestore'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getStorage, ref as refFirestore, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { getStorage, ref as refFirestore, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 
 const currentUser = getAuth().currentUser?.displayName
 const username = ref('')
@@ -223,9 +222,12 @@ const getImage = async (UID: String) => {
 async function uploadProfilePicture() {
   const input = document.createElement('input')
   input.type = 'file'
-  input.accept = 'image/*' // accept only image files
+  input.accept = 'image/*' // Accept only image files
   input.onchange = function (event) {
     const files = (event.target as HTMLInputElement).files
+    //delete current image from database
+    deletePreviousImageFromFirestore()
+
     if (files && files.length > 0) {
       const image = files[0]
       const storage = getStorage()
@@ -242,6 +244,29 @@ async function uploadProfilePicture() {
     }
   }
   input.click()
+}
+
+const deletePreviousImageFromFirestore = async () => {
+  try {
+    const docRef = doc(db, 'images', `${currentUserUID}`)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      const previousImage = docSnap.data().profilePicture
+      const storage = getStorage()
+      const imageRef = refFirestore(storage, previousImage)
+      deleteObject(imageRef)
+        .then(() => {
+          console.log('Previous image deleted successfully')
+        })
+        .catch((error) => {
+          console.error('Error deleting previous image:', error)
+        })
+    } else {
+      console.log('No such document!')
+    }
+  } catch (error) {
+    console.error('Error getting document:', error)
+  }
 }
 
 const addChattingPartner = () => {

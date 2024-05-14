@@ -46,8 +46,7 @@ const router = useRouter()
 const goToProfile = () => {
   router.push({ name: 'dashboard', params: { username: props.name } }).then(() => {
     // Reload the page after navigation is complete
-    window.location.reload()
-  })  
+  })
 }
 </script>
 

@@ -69,7 +69,7 @@
         </p>
       </div>
       <div>
-        <ProfileEditModal v-if="showModal"/>
+        <ProfileEditModal v-if="showModal" />
       </div>
       <div class="row">
         <div class="col-md-6 ml-auto mr-auto">
@@ -168,7 +168,7 @@ import { db } from '@/main'
 
 import { getAuth } from 'firebase/auth'
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   getStorage,
@@ -180,13 +180,27 @@ import {
 import ProfileEditModal from '@/components/ProfileEditModal.vue'
 
 const currentUser = getAuth().currentUser?.displayName
-const username = ref('')
+let username = ref('')
 const route = useRoute()
 const router = useRouter()
 const currentUserUID = getAuth().currentUser?.uid
 const profileImg = ref('')
 const viewedUserUID = ref('')
 const showModal = ref(true)
+
+watch(
+  () => route.params.username,
+  (newUsername) => {
+    if (newUsername) {
+      if (Array.isArray(newUsername)) {
+        username.value = newUsername[0]
+      } else {
+        username.value = newUsername
+      }
+      getProfilePicture()
+    }
+  }
+)
 
 const getProfilePicture = async () => {
   try {
@@ -196,8 +210,9 @@ const getProfilePicture = async () => {
 
     querySnapshot.forEach((doc) => {
       // Access document data
-      let profileUID = doc.data().uid
-      viewedUserUID.value = profileUID
+      let profileUID = doc.data().uid as string
+      viewedUserUID.value = profileUID.toString()
+      console.log(viewedUserUID.value + ' DER ANSCHAUENDE BOSS')
       getImage(profileUID)
     })
   } catch (error) {
@@ -349,10 +364,14 @@ async function createSubcollection(
 }
 
 onMounted(() => {
-  username.value = Array.isArray(route.params.username)
-    ? route.params.username[0]
-    : route.params.username
-  getProfilePicture()
+  if (route.params.username) {
+    if (Array.isArray(route.params.username)) {
+      username.value = route.params.username[0]
+    } else {
+      username.value = route.params.username
+    }
+    getProfilePicture()
+  }
 })
 </script>
 

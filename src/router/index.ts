@@ -73,7 +73,7 @@ router.beforeEach(async (to, from, next) => {
     // If the route requires authentication and the user is not logged in, redirect to login page
     next('/')
     return
-  } else if ((to.params.username)) {
+  } else if (to.params.username) {
     // If the route contains a username parameter, check if it exists in Firestore
     const username = to.params.username
     try {
@@ -83,7 +83,7 @@ router.beforeEach(async (to, from, next) => {
       const querySnapshot = await getDocs(q)
       if (querySnapshot.empty) {
         // If the username does not exist in Firestore, redirect to a 404 page or any other appropriate route
-        next('/')        
+        next('/')
         return
       } else {
         next() // Proceed to the next route if the username exists

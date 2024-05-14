@@ -103,7 +103,7 @@ const addUserButtons = (): void => {
       //get the chat messages
       getChatMessages(currentUserUID, partnerUID)
       // Update the chat header
-      document.querySelector('.chat-header')!.textContent = `${value}`
+      document.querySelector('.chat-header')!.textContent = `${key}`
     })
     document.querySelector('.person-selector')?.appendChild(newButton)
   }

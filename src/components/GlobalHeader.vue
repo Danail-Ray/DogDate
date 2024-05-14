@@ -53,12 +53,9 @@ const landingPage = () => {
 }
 
 const reloadDashboardPage = () => {
-  router
-    .push({ name: 'dashboard', params: { username: displayName, uid: user.value?.uid } })
-    .then(() => {
-      // Reload the page after navigation is complete
-      window.location.reload()
-    })
+  router.push({ name: 'dashboard', params: { username: displayName } }).then(() => {
+    // Reload the page after navigation is complete
+  })
 }
 
 const signOutUser = () => {

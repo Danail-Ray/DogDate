@@ -9,7 +9,7 @@
       </div>
 
       <div class="cards">
-        <div v-for="user in visibleUsers" :key="user" class="card-container">
+        <div v-for="(user, uid) in visibleUsers" :key="uid" class="card-container">
           <dogCard :name="user" />
         </div>
       </div>
@@ -59,7 +59,13 @@ const loadMore = async () => {
 }
 
 const sliceUsers = () => {
-  users.value = users.value.slice(3)
+  if (window.innerWidth < 800) {
+    users.value = users.value.slice(1)
+  } else if (window.innerWidth < 1300) {
+    users.value = users.value.slice(2)
+  } else {
+    users.value = users.value.slice(3)
+  }
 
   if (users.value.length === 0) {
     loadMore()

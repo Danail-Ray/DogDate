@@ -68,6 +68,9 @@
           a warm, intimate feel with a solid groove structure.
         </p>
       </div>
+      <div>
+        <ProfileEditModal v-if="showModal"/>
+      </div>
       <div class="row">
         <div class="col-md-6 ml-auto mr-auto">
           <div class="profile-tabs">
@@ -84,7 +87,6 @@
                   Edit Profile
                 </a>
               </li>
-
               <li class="nav-item" v-if="username !== currentUser">
                 <a class="nav-link" href="#works" role="tab" data-toggle="tab">
                   <i class="material-icons" @click="addChattingPartner">forum</i>
@@ -95,7 +97,6 @@
           </div>
         </div>
       </div>
-
       <div class="tab-content tab-space">
         <div class="tab-pane active text-center gallery" id="studio">
           <div class="row">
@@ -166,18 +167,17 @@ import Header from '../components/GlobalHeader.vue'
 import { db } from '@/main'
 
 import { getAuth } from 'firebase/auth'
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where
-} from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getStorage, ref as refFirestore, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
+import {
+  getStorage,
+  ref as refFirestore,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject
+} from 'firebase/storage'
+import ProfileEditModal from '@/components/ProfileEditModal.vue'
 
 const currentUser = getAuth().currentUser?.displayName
 const username = ref('')
@@ -186,6 +186,7 @@ const router = useRouter()
 const currentUserUID = getAuth().currentUser?.uid
 const profileImg = ref('')
 const viewedUserUID = ref('')
+const showModal = ref(true)
 
 const getProfilePicture = async () => {
   try {
@@ -197,7 +198,6 @@ const getProfilePicture = async () => {
       // Access document data
       let profileUID = doc.data().uid
       viewedUserUID.value = profileUID
-      console.log(profileUID + ' ' + currentUserUID)
       getImage(profileUID)
     })
   } catch (error) {

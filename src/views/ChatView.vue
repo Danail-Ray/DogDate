@@ -40,8 +40,7 @@ import {
   setDoc,
   orderBy,
   query,
-  deleteDoc,
-  where
+  deleteDoc
 } from 'firebase/firestore'
 import { onBeforeMount, onMounted, ref } from 'vue'
 import Header from '../components/GlobalHeader.vue'

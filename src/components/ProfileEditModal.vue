@@ -1,68 +1,158 @@
 <template>
-  <div class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Profile</h5>
-          <button type="button" class="close" @click="closeModal">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <!-- Form to edit profile information -->
-          <div class="form-group">
-            <label for="jobTitle">Job Title</label>
-            <input type="text" class="form-control" id="jobTitle" v-model="editedUser.jobTitle" />
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea
-              class="form-control"
-              id="description"
-              v-model="editedUser.description"
-            ></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
-          <button type="button" class="btn btn-primary" @click="saveChanges">Save changes</button>
-        </div>
+  <div class="profile-container">
+    <h2>Profil ändern</h2>
+    <form @submit.prevent="updateProfileFireBase">
+      <div class="form-group">
+        <label for="username">Benutzername</label>
+        <input type="text" id="username" v-model="user.username" />
       </div>
-    </div>
+      <div class="form-group">
+        <label for="email">E-Mail</label>
+        <input type="email" id="email" v-model="user.email" />
+      </div>
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" v-model="user.bio"></textarea>
+      </div>
+      <button type="submit">Profil aktualisieren</button>
+    </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
+import { getFirestore, doc, setDoc, getDocs } from 'firebase/firestore'
+import { getAuth, updateProfile } from 'firebase/auth'
+import { query, collection, where } from 'firebase/firestore'
 
+const db = getFirestore()
+const currentUser = getAuth().currentUser
+const username = currentUser?.displayName?.toString() || ''
+const userUID = currentUser?.uid
+const email = currentUser?.email
+const userBio = ref('') // Hier wird die Benutzer-Bio gespeichert
+
+// Benutzerdaten aus der Firestore-Datenbank abrufen
+const getUserData = async () => {
+  // Hier würdest du eine API-Anfrage senden, um die Benutzerdaten abzurufen.
+  const q = query(collection(db, 'profiles'), where('name', '==', username))
+  getDocs(q).then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, ' => ', doc.data())
+      console.log(doc.data().bio)
+      userBio.value = doc.data().bio.toString()
+      user.bio = userBio.value
+      console.log(userBio)
+    })
+  })
+}
+
+// Benutzerdaten-Interface
 interface User {
-  jobTitle: string
-  description: string
+  username: string
+  email: string
+  bio: string
 }
 
-interface EditedUser {
-  jobTitle: string
-  description: string
-}
-
-const editedUser = ref<EditedUser>({
-  jobTitle: '',
-  description: ''
+// Initialisierung des Benutzerobjekts
+const user = reactive<User>({
+  username: '',
+  email: '',
+  bio: ''
 })
 
-const closeModal = () => {
-  // Reset edited user data
-  editedUser.value = {
-    jobTitle: '',
-    description: ''
+// Profil-Update-Methode
+const updateProfileFireBase = async () => {
+  // Hier würdest du eine API-Anfrage senden, um das Benutzerprofil zu aktualisieren. Merge the new data with the existing data
+  const docRef = doc(db, 'profiles', `${userUID}`)
+  await setDoc(
+    docRef,
+    {
+      // Don't change these yet, need to cahnge the user object first. Change username to not be unique, and actually change the displayname.
+      name: user.username,
+      // email: user.email,
+      bio: user.bio
+    },
+    { merge: true }
+  )
+
+  //Change the name in auth as well
+  if (currentUser) {
+    updateProfile(currentUser, {
+      displayName: user.username
+    })
+      .then(() => {
+        // Profile updated!
+        // ...
+      })
+      .catch((error) => {
+        // An error occurred
+        // ...
+      })
+    localStorage.setItem('displayName', user.username)
+    console.log('Profil aktualisiert:', user)
   }
+
+  localStorage.setItem('displayName', user.username)
+  console.log('Profil aktualisiert:', user)
 }
 
-const saveChanges = () => {
-  // Perform action to save changes (e.g., update user profile)
-  // Emit an event or use a callback to inform the parent component
-  // about the changes and close the modal
-  // For simplicity, let's just close the modal here
-  closeModal()
-}
+// Daten laden, wenn die Komponente gemountet wird (dies ist nur ein Beispiel)
+user.username = username?.toString() || ''
+user.email = email?.toString() || ''
+
+onMounted(() => {
+  getUserData()
+})
 </script>
+
+<style scoped>
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #552727;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  color: black;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: black;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+</style>

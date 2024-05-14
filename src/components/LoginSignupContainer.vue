@@ -123,7 +123,8 @@ const addUserToFirestore = (uid: String, displayName: String, email: String) => 
       age: 0,
       image_source: ''
     },
-    age: ''
+    age: '',
+    bio: ''
   })
 }
 

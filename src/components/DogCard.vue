@@ -8,7 +8,7 @@
           <button>Hover me!</button>
         </div>
         <div class="card-back">
-          <h1>Username</h1>
+          <h1>{{ name }}</h1>
           <p>Oqweohj qowioqwe oqiwueoq e oqwiejoq w</p>
           <div class="row">
             <div class="col">

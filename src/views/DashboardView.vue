@@ -168,7 +168,7 @@ import { db } from '@/main'
 
 import { getAuth } from 'firebase/auth'
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
-import { onBeforeMount, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   getStorage,
@@ -184,7 +184,7 @@ let username = ref('')
 const route = useRoute()
 const router = useRouter()
 const currentUserUID = getAuth().currentUser?.uid
-const profileImg = ref('')
+let profileImg = ref('')
 const viewedUserUID = ref('')
 const showModal = ref(true)
 
@@ -212,7 +212,6 @@ const getProfilePicture = async () => {
       // Access document data
       let profileUID = doc.data().uid as string
       viewedUserUID.value = profileUID.toString()
-      console.log(viewedUserUID.value + ' DER ANSCHAUENDE BOSS')
       getImage(profileUID)
     })
   } catch (error) {
@@ -227,6 +226,7 @@ const getImage = async (UID: String) => {
     if (docSnap.exists()) {
       profileImg.value = docSnap.data().profilePicture
     } else {
+      profileImg.value = ''
       console.log('No such document!')
     }
   } catch (error) {

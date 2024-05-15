@@ -297,7 +297,8 @@ const addChattingPartnerToDb = async (username: string) => {
   const currentUserUID = currentUser ? currentUser.uid : ''
 
   checkAndCreateDocument(currentUserUID)
-  fetchData(username, currentUserUID)
+  const documentPath = `Messages/${currentUserUID}`
+  createSubcollection(documentPath, viewedUserUID.value, username)
 }
 
 async function checkAndCreateDocument(currentUserUID: string) {
@@ -321,30 +322,6 @@ async function checkAndCreateDocument(currentUserUID: string) {
   }
 }
 
-async function fetchData(username: string, currentUserUID: string) {
-  try {
-    //query the database to get the chatting partner's UID
-    const q = query(collection(db, 'profiles'), where('name', '==', username))
-    // Fetch the profiles collection
-    const querySnapshot = await getDocs(q)
-    let chattingPartnerUID = ''
-    let chattingPartnerUsername = ''
-
-    // Iterate over the documents in the collection
-    querySnapshot.forEach((doc) => {
-      // Access document data
-      chattingPartnerUID = doc.data().uid
-      chattingPartnerUsername = doc.data().name
-
-      // const documentPath = `Messages/${currentUserUID}`
-      // const subcollectionPath = `${documentPath}/ChatPartners/${chattingPartnerUID}`
-    })
-    const documentPath = `Messages/${currentUserUID}`
-    createSubcollection(documentPath, chattingPartnerUID, chattingPartnerUsername)
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  }
-}
 
 async function createSubcollection(
   documentPath: string,

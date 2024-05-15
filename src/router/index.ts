@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { auth } from '../main'
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
+import { getFirestore, doc, getDoc } from 'firebase/firestore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -79,10 +79,10 @@ router.beforeEach(async (to, from, next) => {
     const uid = to.params.uid
     try {
       const db = getFirestore()
-      const collectionRef = collection(db, 'profiles')
-      const q = query(collectionRef, where('uid', '==', uid))
-      const querySnapshot = await getDocs(q)
-      if (querySnapshot.empty) {
+      const ref = doc(db, 'profiles', uid.toString())
+      const docSnap = await getDoc(ref)
+
+      if (!docSnap.exists) {
         // If the username does not exist in Firestore, redirect to a 404 page or any other appropriate route
         next('/')
         return

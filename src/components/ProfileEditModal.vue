@@ -21,9 +21,9 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { getFirestore, doc, setDoc, getDocs } from 'firebase/firestore'
+import { getFirestore, doc, setDoc } from 'firebase/firestore'
 import { getAuth, updateProfile } from 'firebase/auth'
-import { query, collection, where } from 'firebase/firestore'
+import { getDoc } from 'firebase/firestore'
 
 const db = getFirestore()
 const currentUser = getAuth().currentUser
@@ -35,16 +35,17 @@ const userBio = ref('') // Hier wird die Benutzer-Bio gespeichert
 // Benutzerdaten aus der Firestore-Datenbank abrufen
 const getUserData = async () => {
   // Hier würdest du eine API-Anfrage senden, um die Benutzerdaten abzurufen.
-  const q = query(collection(db, 'profiles'), where('name', '==', username))
-  getDocs(q).then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, ' => ', doc.data())
-      console.log(doc.data().bio)
-      userBio.value = doc.data().bio.toString()
-      user.bio = userBio.value
-      console.log(userBio)
-    })
-  })
+
+  const ref = doc(db, 'profiles', `${userUID}`)
+  const docSnap = await getDoc(ref)
+
+  if (docSnap.exists()) {
+    userBio.value = docSnap.data().bio.toString()
+    user.bio = userBio.value
+  } else {
+    // doc.data() will be undefined in this case
+    console.log('No such document!')
+  }
 }
 
 // Benutzerdaten-Interface
@@ -85,7 +86,7 @@ const updateProfileFireBase = async () => {
         // Profile updated!
         // ...
       })
-      .catch((error) => {
+      .catch(() => {
         // An error occurred
         // ...
       })

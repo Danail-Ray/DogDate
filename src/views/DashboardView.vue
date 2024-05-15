@@ -167,7 +167,7 @@ import Header from '../components/GlobalHeader.vue'
 import { db } from '@/main'
 
 import { getAuth } from 'firebase/auth'
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { doc, getDoc,setDoc } from 'firebase/firestore'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {

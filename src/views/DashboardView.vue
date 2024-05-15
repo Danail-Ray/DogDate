@@ -370,13 +370,22 @@ async function createSubcollection(
 }
 
 onMounted(() => {
+  if (route.params.username) {
+    if (Array.isArray(route.params.username)) {
+      username.value = route.params.username[0]
+    } else {
+      username.value = route.params.username
+    }
+    getProfileData()
+  }
+
   if (route.params.uid) {
     if (Array.isArray(route.params.uid)) {
       viewedUserUID.value = route.params.uid[0]
     } else {
       viewedUserUID.value = route.params.uid
     }
-    onFirstLoad()
+    getProfileData()
   }
 })
 </script>

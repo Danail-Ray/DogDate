@@ -151,9 +151,7 @@ async function getChatMessages(
     })
 
     //fix this shit
-    const unreadMessages = query(
-      collection(db, 'Messages', `${currentUserUID}`, 'unReadMessages'), 
-    )
+    const unreadMessages = query(collection(db, 'Messages', `${currentUserUID}`, 'unReadMessages'))
     getDocs(unreadMessages).then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const message = doc.data()
@@ -269,6 +267,7 @@ function sendMessage(event: Event): void {
 }
 
 const markUserWithUnreadMessages = () => {
+  if (!currentUserUID) return
   const personSelector = document.querySelector('.person-selector')
   if (!personSelector) return
   const buttons = personSelector.querySelectorAll('button')
@@ -293,6 +292,7 @@ const markUserWithUnreadMessages = () => {
 }
 
 onMounted(() => {
+  if (!currentUserUID) return
   getData(currentUserUID)
   const q = collection(db, 'Messages', `${currentUserUID}`, 'ChatPartners')
   const unsubscribeChatPartners = onSnapshot(q, (snapshot) => {
@@ -314,6 +314,7 @@ onMounted(() => {
 
   // Unsubscribe when component is unmounted
   onBeforeMount(() => {
+    if (!currentUserUID) return
     unsubscribeChatPartners()
     unsubscribeUnreadMessages()
   })

@@ -176,6 +176,7 @@ import {
   deleteObject
 } from 'firebase/storage'
 import ProfileEditModal from '@/components/ProfileEditModal.vue'
+import { auth } from 'firebase-admin'
 
 const currentUser = getAuth().currentUser?.displayName
 let username = ref('')
@@ -203,6 +204,10 @@ watch(
 )
 
 const getProfileData = async () => {
+  if (!getAuth().currentUser){
+    return
+  }
+
   try {
     //query the database to get the profile data
     const ref = doc(db, 'profiles', viewedUserUID.value)

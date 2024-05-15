@@ -97,7 +97,7 @@ const register = () => {
           addUserToFirestore(userCredential.user.uid, username.value, email.value)
           // Signed in
           localStorage.setItem('displayName', username.value)
-          router.push('/dashboard/' + username.value)
+          router.push(`/dashboard/${username.value}/${userCredential.user.uid}`)
         })
         .catch((error) => {
           console.error('Error updating profile:', error)
@@ -137,7 +137,7 @@ const signIn = () => {
       // Signed in
       const user = userCredential.user
       localStorage.setItem('displayName', user.uid.username)
-      router.push(`/dashboard/${user.displayName}`)
+      router.push(`/dashboard/${user.displayName}/${user.uid}`)
     })
     .catch((error: { code: any; message: any }) => {
       const errorCode = error.code

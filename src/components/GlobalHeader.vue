@@ -59,10 +59,11 @@ const reloadDashboardPage = () => {
 }
 
 const signOutUser = () => {
-  signOut(auth)
+  router
+    .push('/')
     .then(() => {
       user.value = null
-      router.push('/')
+      signOut(auth)
     })
     .catch((error) => {
       console.error('Sign out error:', error.message)

@@ -19,7 +19,7 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/dashboard/:uid/:username',
+      path: '/dashboard/:username/:uid',
       name: 'dashboard',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -81,8 +81,9 @@ router.beforeEach(async (to, from, next) => {
       const db = getFirestore()
       const ref = doc(db, 'profiles', uid.toString())
       const docSnap = await getDoc(ref)
+      const correctUsername = docSnap.data()?.username
 
-      if (!docSnap.exists) {
+      if (!docSnap.exists()) {
         // If the username does not exist in Firestore, redirect to a 404 page or any other appropriate route
         next('/')
         return

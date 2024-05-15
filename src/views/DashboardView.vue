@@ -63,9 +63,7 @@
       </div>
       <div class="description text-center">
         <p>
-          An artist of considerable range, Chet Faker — the name taken by Melbourne-raised,
-          Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it
-          a warm, intimate feel with a solid groove structure.
+          {{ userBio }}
         </p>
       </div>
       <div>
@@ -167,7 +165,7 @@ import Header from '../components/GlobalHeader.vue'
 import { db } from '@/main'
 
 import { getAuth } from 'firebase/auth'
-import { doc, getDoc,setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -177,7 +175,7 @@ import {
   getDownloadURL,
   deleteObject
 } from 'firebase/storage'
-// import ProfileEditModal from '@/components/ProfileEditModal.vue'
+import ProfileEditModal from '@/components/ProfileEditModal.vue'
 
 const currentUser = getAuth().currentUser?.displayName
 let username = ref('')
@@ -186,7 +184,8 @@ const router = useRouter()
 const currentUserUID = getAuth().currentUser?.uid
 let profileImg = ref('')
 const viewedUserUID = ref('')
-// const showModal = ref(true)
+const showModal = ref(true)
+const userBio = ref('')
 
 watch(
   () => route.params.uid,
@@ -211,6 +210,7 @@ const getProfileData = async () => {
 
     if (docSnap.exists()) {
       username.value = docSnap.data().name
+      userBio.value = docSnap.data().bio
       console.log('Document data:', docSnap.data())
       getImage(viewedUserUID.value)
     } else {
@@ -248,7 +248,9 @@ async function uploadProfilePicture() {
     if (files && files.length > 0) {
       const image = files[0]
       const storage = getStorage()
-      const imageRef = refFirestore(storage, image.name)
+      const folderPath = `user_profiles/${currentUserUID}/profile_pictures/` // Specify folder path
+      const imageRef = refFirestore(storage, `${folderPath}${image.name}`)
+
       uploadBytes(imageRef, image).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((downloadUrl) => {
           setDoc(doc(db, 'images', `${currentUserUID}`), {
@@ -256,6 +258,7 @@ async function uploadProfilePicture() {
             profilePicture: downloadUrl,
             createdAt: new Date()
           })
+          profileImg.value = downloadUrl
         })
       })
     }
@@ -321,7 +324,6 @@ async function checkAndCreateDocument(currentUserUID: string) {
     console.error('Error checking or creating document:', error)
   }
 }
-
 
 async function createSubcollection(
   documentPath: string,

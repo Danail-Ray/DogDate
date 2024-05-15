@@ -9,8 +9,8 @@
       </div>
 
       <div class="cards">
-        <div v-for="(user, uid) in visibleUsers" :key="uid" class="card-container">
-          <dogCard :name="user" />
+        <div v-for="(user, index) in visibleUsers" :key="index" class="card-container">
+          <dogCard :name="user" :uid= "getKeyAtIndex(index)"/>
         </div>
       </div>
 
@@ -28,17 +28,22 @@ import { getAuth } from 'firebase/auth'
 import { ref, onBeforeMount, computed } from 'vue'
 import { getFirestore, collection, query, limit, getDocs } from 'firebase/firestore'
 
-let users = ref<string[]>([])
+const users = ref(new Map<string, string>())
 const db = getFirestore()
 const user = getAuth().currentUser
 
+const getKeyAtIndex = (index: number): string | undefined => {
+  const keysArray = Array.from(users.value.keys())
+  return keysArray[index]
+}
+
 const visibleUsers = computed(() => {
   if (window.innerWidth < 800) {
-    return users.value.slice(0, 1)
+    return Array.from(users.value.values()).slice(0, 1)
   } else if (window.innerWidth < 1300) {
-    return users.value.slice(0, 2)
+    return Array.from(users.value.values()).slice(0, 2)
   } else {
-    return users.value.slice(0, 3)
+    return Array.from(users.value.values()).slice(0, 3)
   }
 })
 
@@ -51,23 +56,33 @@ const loadMore = async () => {
     const querySnapshot = await getDocs(q)
 
     querySnapshot.forEach((doc) => {
-      users.value.push(doc.data().name)
+      let data = doc.data()
+      users.value.set(doc.id, data.name)
     })
   } catch (error) {
     console.error('Error getting documents:', error)
   }
 }
+const removeFirstUser = () => {
+  const firstKey = users.value.keys().next().value
+  if (firstKey !== undefined) {
+    users.value.delete(firstKey)
+  }
+}
 
 const sliceUsers = () => {
   if (window.innerWidth < 800) {
-    users.value = users.value.slice(1)
+    removeFirstUser()
   } else if (window.innerWidth < 1300) {
-    users.value = users.value.slice(2)
+    removeFirstUser()
+    removeFirstUser()
   } else {
-    users.value = users.value.slice(3)
+    removeFirstUser()
+    removeFirstUser()
+    removeFirstUser()
   }
 
-  if (users.value.length === 0) {
+  if (users.value.size === 0) {
     loadMore()
   }
 }
@@ -78,9 +93,10 @@ onBeforeMount(() => {
 
 window.addEventListener('resize', () => {
   if (window.innerWidth < 800 && visibleUsers.value.length > 1) {
-    users.value = users.value.slice(0, 1)
+    removeFirstUser()
   } else if (window.innerWidth < 1300 && visibleUsers.value.length > 2) {
-    users.value = users.value.slice(0, 2)
+    removeFirstUser()
+    removeFirstUser()
   }
 })
 </script>

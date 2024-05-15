@@ -39,12 +39,13 @@ import { useRouter } from 'vue-router'
 
 // Define props
 const props = defineProps({
-  name: String
+  name: String,
+  uid: String
 })
 
 const router = useRouter()
 const goToProfile = () => {
-  router.push({ name: 'dashboard', params: { username: props.name } }).then(() => {
+  router.push({ name: 'dashboard', params: { username: props.name, uid: props.uid } }).then(() => {
     // Reload the page after navigation is complete
   })
 }

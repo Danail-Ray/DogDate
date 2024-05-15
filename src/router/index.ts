@@ -19,7 +19,7 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/dashboard/:username',
+      path: '/dashboard/:uid/:username',
       name: 'dashboard',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -73,13 +73,14 @@ router.beforeEach(async (to, from, next) => {
     // If the route requires authentication and the user is not logged in, redirect to login page
     next('/')
     return
-  } else if (to.params.username) {
+  } else if (to.params.username && to.params.uid) {
     // If the route contains a username parameter, check if it exists in Firestore
     const username = to.params.username
+    const uid = to.params.uid
     try {
       const db = getFirestore()
       const collectionRef = collection(db, 'profiles')
-      const q = query(collectionRef, where('name', '==', username))
+      const q = query(collectionRef, where('uid', '==', uid))
       const querySnapshot = await getDocs(q)
       if (querySnapshot.empty) {
         // If the username does not exist in Firestore, redirect to a 404 page or any other appropriate route

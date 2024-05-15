@@ -69,7 +69,7 @@
         </p>
       </div>
       <div>
-        <ProfileEditModal v-if="showModal" />
+        <!-- <ProfileEditModal v-if="showModal" /> -->
       </div>
       <div class="row">
         <div class="col-md-6 ml-auto mr-auto">
@@ -177,7 +177,7 @@ import {
   getDownloadURL,
   deleteObject
 } from 'firebase/storage'
-import ProfileEditModal from '@/components/ProfileEditModal.vue'
+// import ProfileEditModal from '@/components/ProfileEditModal.vue'
 
 const currentUser = getAuth().currentUser?.displayName
 let username = ref('')
@@ -186,25 +186,26 @@ const router = useRouter()
 const currentUserUID = getAuth().currentUser?.uid
 let profileImg = ref('')
 const viewedUserUID = ref('')
-const showModal = ref(true)
+// const showModal = ref(true)
 
 watch(
-  () => route.params.username,
-  (newUsername) => {
-    if (newUsername) {
-      if (Array.isArray(newUsername)) {
-        username.value = newUsername[0]
+  () => route.params.uid,
+  (newUID) => {
+    console.log(newUID)
+    if (newUID) {
+      if (Array.isArray(newUID)) {
+        viewedUserUID.value = newUID[0]
       } else {
-        username.value = newUsername
+        viewedUserUID.value = newUID
       }
-      getProfilePicture()
+      getProfileData()
     }
   }
 )
 
-const getProfilePicture = async () => {
+const getProfileData = async () => {
   try {
-    const q = query(collection(db, 'profiles'), where('name', '==', username.value))
+    const q = query(collection(db, 'profiles'), where('uid', '==', viewedUserUID.value))
     // Fetch the profiles collection
     const querySnapshot = await getDocs(q)
 
@@ -212,6 +213,7 @@ const getProfilePicture = async () => {
       // Access document data
       let profileUID = doc.data().uid as string
       viewedUserUID.value = profileUID.toString()
+      username.value = doc.data().name
       getImage(profileUID)
     })
   } catch (error) {
@@ -370,7 +372,7 @@ onMounted(() => {
     } else {
       username.value = route.params.username
     }
-    getProfilePicture()
+    getProfileData()
   }
 })
 </script>

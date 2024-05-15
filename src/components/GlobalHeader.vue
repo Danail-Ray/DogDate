@@ -10,7 +10,7 @@
       <!-- <RouterLink to="/search">Search</RouterLink> -->
       <RouterLink to="/chat">Chats</RouterLink>
       <template v-if="user">
-        <RouterLink :to="`/dashboard/${displayName}`" @click="reloadDashboardPage"
+        <RouterLink :to="`/dashboard/${displayName}/${userUID}`" @click="reloadDashboardPage"
           >My Profile</RouterLink
         >
       </template>
@@ -53,7 +53,7 @@ const landingPage = () => {
 }
 
 const reloadDashboardPage = () => {
-  router.push({ name: 'dashboard', params: { username: displayName } }).then(() => {
+  router.push({ name: 'dashboard', params: { username: displayName, uid: userUID } }).then(() => {
     // Reload the page after navigation is complete
   })
 }

@@ -203,6 +203,10 @@ watch(
   }
 )
 
+const onFirstLoad = () => {
+  getProfileData()
+}
+
 const getProfileData = async () => {
   try {
     const q = query(collection(db, 'profiles'), where('uid', '==', viewedUserUID.value))
@@ -212,8 +216,8 @@ const getProfileData = async () => {
     querySnapshot.forEach((doc) => {
       // Access document data
       let profileUID = doc.data().uid as string
-      viewedUserUID.value = profileUID.toString()
       username.value = doc.data().name
+      viewedUserUID.value = profileUID.toString()
       getImage(profileUID)
     })
   } catch (error) {
@@ -366,13 +370,13 @@ async function createSubcollection(
 }
 
 onMounted(() => {
-  if (route.params.username) {
-    if (Array.isArray(route.params.username)) {
-      username.value = route.params.username[0]
+  if (route.params.uid) {
+    if (Array.isArray(route.params.uid)) {
+      viewedUserUID.value = route.params.uid[0]
     } else {
-      username.value = route.params.username
+      viewedUserUID.value = route.params.uid
     }
-    getProfileData()
+    onFirstLoad()
   }
 })
 </script>

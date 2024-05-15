@@ -203,23 +203,19 @@ watch(
   }
 )
 
-const onFirstLoad = () => {
-  getProfileData()
-}
-
 const getProfileData = async () => {
   try {
-    const q = query(collection(db, 'profiles'), where('uid', '==', viewedUserUID.value))
-    // Fetch the profiles collection
-    const querySnapshot = await getDocs(q)
+    //query the database to get the profile data
+    const ref = doc(db, 'profiles', viewedUserUID.value)
+    const docSnap = await getDoc(ref)
 
-    querySnapshot.forEach((doc) => {
-      // Access document data
-      let profileUID = doc.data().uid as string
-      username.value = doc.data().name
-      viewedUserUID.value = profileUID.toString()
-      getImage(profileUID)
-    })
+    if (docSnap.exists()) {
+      username.value = docSnap.data().name
+      console.log('Document data:', docSnap.data())
+      getImage(viewedUserUID.value)
+    } else {
+      console.log('No such document!')
+    }
   } catch (error) {
     console.error('Error getting document:', error)
   }
@@ -376,7 +372,6 @@ onMounted(() => {
     } else {
       username.value = route.params.username
     }
-    getProfileData()
   }
 
   if (route.params.uid) {

@@ -47,20 +47,23 @@ const firebaseConfig = {
 
 const init = initializeApp(firebaseConfig)
 // const analytics = getAnalytics(init);
+const app = createApp(App)
+app.use(createPinia())
+app.use(router)
+app.mount('#app')
 
 const auth = getAuth(init)
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    //user.refreshToken
-    createApp(App).use(createPinia()).use(router).mount('#app')
-    console.log('User is signed in:', user)
+    // User is signed in.
+    console.log('User is signed in')
+    router.push('/dashboard/' + user.displayName + '/' + user.uid)
   } else {
-    // // User is signed out.
-    const app = createApp(App)
-    app.use(createPinia())
-    app.use(router)
-    app.mount('#app')
-    console.log('User is signed out')
+    // No user is signed in.
+    console.log('No user is signed in')
+    router.push('/')
+    //updateHaeder()
+    
   }
 })
 

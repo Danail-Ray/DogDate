@@ -39,7 +39,7 @@ const toggleLoginSignup = () => {
   showLoginSignup.value = !showLoginSignup.value
 }
 
-import { getAuth, signOut } from 'firebase/auth'
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { getFirestore, doc, setDoc, GeoPoint } from 'firebase/firestore'
 
